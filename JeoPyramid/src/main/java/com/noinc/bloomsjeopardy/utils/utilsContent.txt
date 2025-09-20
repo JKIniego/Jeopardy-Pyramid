@@ -1,0 +1,2 @@
+This should contain reusable helper classes such as SoundManager 
+and Constants (windows dimension, colors, file paths) for organization purposes

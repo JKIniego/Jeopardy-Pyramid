@@ -1,0 +1,2 @@
+This should contain the data and core business logic of the game.
+e.g. Question, Player, GameState, Category
