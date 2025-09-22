@@ -1,0 +1,10 @@
+This refers to the environment in which the search takes place.;What is problem space?;What is problem instance?;What is problem space graph?;What is admissibility?
+The process of transforming an initial state into a goal state using a sequence of steps is known as this.;What is searching?;What is a problem space?;What is game playing?;What is heuristic evaluation?
+This term describes the maximum number of nodes stored in memory during a search.;What is space complexity?;What is time complexity?;What is the branching factor?;What is cut-off depth?
+This term describes the maximum number of nodes stored in memory during a search.;What is space complexity?;What is time complexity?;What is the branching factor?;What is cut-off depth?
+This search method works from the initial state and applies rules until no more can be applied.;What is forward search?;What is backward search?;What is hill climbing?;What is beam search?
+The set of all possible candidates for solutions in a search problem is called this.;What is a search space?;What is a search operator?;What is a search graph?;What is a branching factor?
+This brute-force algorithm explores nodes layer by layer until a solution is found.;What is breadth-first search?;What is depth-first search?;What is hill climbing?;What is beam search?
+This searching algorithm is a brute force search algorithm that uses recursion.;What is depth-first search?;What is breadth-first search?;What is best-first search?;What is hill-climbing?
+This two-player game strategy involves one player maximizing gains while other minimizes losses.;What is the minimax strategy?;What is alpha-beta pruning?;What is hill climbing?;What is best-first search?
+This strategy ensures that both maximizing and minimizing players are considered by maintaining alpha and beta thresholds.;What is alpha-beta pruning?;What is a minimax strategy?;What is best-first search?;What is hill climbing?
