@@ -36,6 +36,8 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     private JButton[][] itemButtonsArray;
     private GUIBrand brand;
     private GameData gameData;
+
+    private JTextPane categoryLabel, statementLabel, choiceALabel, choiceBLabel, choiceCLabel, choiceDLabel;
     
     public GUIGameScreen(GameData gameData, JPanel parentPanel, GUIBrand brand) {
         this.parentPanel = parentPanel;
@@ -225,17 +227,17 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         choiceCPanel.addMouseListener(this);
         choiceDPanel.addMouseListener(this);
 
-        
-        JLabel categoryLabel = new JLabel(gameData.getQnaStrings()[0]);
-        categoryLabel.setFont(brand.CustomFontExtraSmall);
-        categoryLabel.setForeground(brand.white);
+        choiceAPanel.setName("choice1");
+        choiceBPanel.setName("choice2");
+        choiceCPanel.setName("choice3");
+        choiceDPanel.setName("choice4");
 
-        //JTextPane categoryLabel  = makeStyledLabel(gameData.getQnaStrings()[0], brand.CustomFontSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
-        JTextPane statementLabel = makeStyledLabel(0, gameData.getQnaStrings()[1], brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
-        JTextPane choiceALabel   = makeStyledLabel(1, gameData.getQnaStrings()[2], brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
-        JTextPane choiceBLabel   = makeStyledLabel(1, gameData.getQnaStrings()[3], brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
-        JTextPane choiceCLabel   = makeStyledLabel(1, gameData.getQnaStrings()[4], brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
-        JTextPane choiceDLabel   = makeStyledLabel(1, gameData.getQnaStrings()[5], brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
+        categoryLabel = makeStyledLabel(0, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
+        statementLabel = makeStyledLabel(0, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
+        choiceALabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
+        choiceBLabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
+        choiceCLabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
+        choiceDLabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
         
         categoryPanel.add(categoryLabel);
         statementPanel.add(statementLabel);
@@ -243,7 +245,6 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         choiceBPanel.add(choiceBLabel);
         choiceCPanel.add(choiceCLabel);
         choiceDPanel.add(choiceDLabel);
-
 
         GridBagConstraints qnaPanelGBC = new GridBagConstraints();
         qnaPanelGBC.fill = GridBagConstraints.BOTH;
@@ -265,6 +266,8 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         screen2BackButton = new JButton("Back");
         screen2BackButton.setActionCommand("GameScreen screen2BackButton");
         categoryPanel.add(screen2BackButton);
+
+        updateQNAScreen();
     }
 
     private JTextPane makeStyledLabel(int type, String text, Font font,  Color fg, Color bg, float lineSpacing, int alignment) {
@@ -277,13 +280,45 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         pane.setFocusable(false);
         pane.setOpaque(false);
         pane.setPreferredSize((type==1) ? new Dimension(470, 150) : new Dimension(800, 150));
-        // Apply paragraph attributes
         StyledDocument doc = pane.getStyledDocument();
         SimpleAttributeSet attrs = new SimpleAttributeSet();
         StyleConstants.setLineSpacing(attrs, lineSpacing);
         StyleConstants.setAlignment(attrs, alignment);
         doc.setParagraphAttributes(0, doc.getLength(), attrs, false);
         return pane;
+    }
+
+    public void updateQNAScreen() {
+        String[] qnaStrings = gameData.getQnaStrings();
+        
+        if (qnaStrings != null && qnaStrings.length >= 6) {
+            categoryLabel.setText(qnaStrings[0]);
+            statementLabel.setText(qnaStrings[1]);
+            choiceALabel.setText(qnaStrings[2]);
+            choiceBLabel.setText(qnaStrings[3]);
+            choiceCLabel.setText(qnaStrings[4]);
+            choiceDLabel.setText(qnaStrings[5]);
+        } else {
+            categoryLabel.setText("Category: General");
+            statementLabel.setText("Statement: Select a question from the pyramid");
+            choiceALabel.setText("A) Choice A");
+            choiceBLabel.setText("B) Choice B");
+            choiceCLabel.setText("C) Choice C");
+            choiceDLabel.setText("D) Choice D");
+        }
+
+        categoryLabel.revalidate();
+        categoryLabel.repaint();
+        statementLabel.revalidate();
+        statementLabel.repaint();
+        choiceALabel.revalidate();
+        choiceALabel.repaint();
+        choiceBLabel.revalidate();
+        choiceBLabel.repaint();
+        choiceCLabel.revalidate();
+        choiceCLabel.repaint();
+        choiceDLabel.revalidate();
+        choiceDLabel.repaint();
     }
 
     public void updateLevels(){
@@ -325,6 +360,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     }
 
     public void showScreen2(){
+        updateQNAScreen();
         CardLayout cl = (CardLayout) screensContainer.getLayout();
         cl.show(screensContainer, "screen2");
     }
@@ -377,6 +413,4 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     public JButton[][] getItemButtonsArray(){
         return itemButtonsArray;
     }
-    
-
 }
