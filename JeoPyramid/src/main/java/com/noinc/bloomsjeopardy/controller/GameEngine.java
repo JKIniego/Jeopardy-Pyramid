@@ -5,7 +5,6 @@ import java.util.Arrays;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
-
 import com.noinc.bloomsjeopardy.data.GameData;
 import com.noinc.bloomsjeopardy.model.GameState;
 import com.noinc.bloomsjeopardy.model.Question;
