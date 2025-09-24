@@ -415,12 +415,55 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         }
     }
 
+    public void showAnswerFeedback(boolean isCorrect, int selectedIndex, int correctIndex) {
+        resetChoicePanels();
+
+        Container choiceAParent = choiceA.getParent();
+        Container choiceBParent = choiceB.getParent();
+        Container choiceCParent = choiceC.getParent();
+        Container choiceDParent = choiceD.getParent();
+
+        switch (selectedIndex) {
+            case 0 -> choiceAParent.setBackground(isCorrect ? brand.green : brand.red);
+            case 1 -> choiceBParent.setBackground(isCorrect ? brand.green : brand.red);
+            case 2 -> choiceCParent.setBackground(isCorrect ? brand.green : brand.red);
+            case 3 -> choiceDParent.setBackground(isCorrect ? brand.green : brand.red);
+        }
+
+        if (!isCorrect) {
+            switch (correctIndex) {
+                case 0 -> choiceAParent.setBackground(brand.green);
+                case 1 -> choiceBParent.setBackground(brand.green);
+                case 2 -> choiceCParent.setBackground(brand.green);
+                case 3 -> choiceDParent.setBackground(brand.green);
+            }
+        }
+
+        choiceAParent.repaint();
+        choiceBParent.repaint();
+        choiceCParent.repaint();
+        choiceDParent.repaint();
+    }
+
+    private void resetChoicePanels() {
+        Container choiceAParent = choiceA.getParent();
+        Container choiceBParent = choiceB.getParent();
+        Container choiceCParent = choiceC.getParent();
+        Container choiceDParent = choiceD.getParent();
+        
+        if (choiceAParent instanceof JPanel) ((JPanel) choiceAParent).setBackground(brand.black);
+        if (choiceBParent instanceof JPanel) ((JPanel) choiceBParent).setBackground(brand.black);
+        if (choiceCParent instanceof JPanel) ((JPanel) choiceCParent).setBackground(brand.black);
+        if (choiceDParent instanceof JPanel) ((JPanel) choiceDParent).setBackground(brand.black);
+    }
+
     public void showScreen1(){
         CardLayout cl = (CardLayout) screensContainer.getLayout();
         cl.show(screensContainer, "screen1");
     }
 
     public void showScreen2(){
+        resetChoicePanels();
         updateQNAScreen();
         CardLayout cl = (CardLayout) screensContainer.getLayout();
         cl.show(screensContainer, "screen2");
