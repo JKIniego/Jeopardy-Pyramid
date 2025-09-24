@@ -1,13 +1,17 @@
 package com.noinc.bloomsjeopardy.controller;
 
 import java.util.Arrays;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 
 import com.noinc.bloomsjeopardy.data.GameData;
 import com.noinc.bloomsjeopardy.model.GameState;
 import com.noinc.bloomsjeopardy.model.Question;
+import com.noinc.bloomsjeopardy.view.GUIEndScreen;
 import com.noinc.bloomsjeopardy.view.GUIGameScreen;
+import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
 import com.noinc.bloomsjeopardy.view.GUIStartScreen;
 import com.noinc.bloomsjeopardy.view.MainGUI;
 
@@ -38,8 +42,21 @@ public class GameEngine {
     public void addActionListeners(){
         ((GUIStartScreen) mainGUI.getStartScreen()).getPlayButton().addActionListener(playerActionListener);
         ((GUIStartScreen) mainGUI.getStartScreen()).getExitButton().addActionListener(playerActionListener);
+        ((GUIModuleScreen) mainGUI.getModuleScreen()).getModuleBackButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getScreen2BackButton().addActionListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceA().addMouseListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceB().addMouseListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceC().addMouseListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceD().addMouseListener(playerActionListener);
+        ((GUIEndScreen) mainGUI.getEndScreen()).getRestartButton().addActionListener(playerActionListener);
+        ((GUIEndScreen) mainGUI.getEndScreen()).getExitButton().addActionListener(playerActionListener);
+
+        JButton moduleButtons[] = ((GUIModuleScreen) mainGUI.getModuleScreen()).getModuleButtons();
+        for(int i = 0; i<moduleButtons.length; i++){
+            moduleButtons[i].addActionListener(playerActionListener);
+        }
+
         updateButtonListeners();
     }
 
@@ -87,58 +104,57 @@ public class GameEngine {
     }
     
     private void updateQNAScreen(Question question) {
-    if (question == null) {
-        System.err.println("Question is null! Using default question.");
-        question = new Question(
-            "Default Answer", 
-            "No question available for this position", 
-            new String[]{"Choice A", "Choice B", "Choice C", "Choice D"}, 
-            0,
-            "General", 
-            100
-        );
-    }
-    
-    String[] qnaStrings = new String[6];
-    qnaStrings[0] = "Category: " + question.getCategory() + " - $" + question.getValue();
-    qnaStrings[1] = "Statement: " + question.getQuestionText();
+        if (question == null) {
+            System.err.println("Question is null! Using default question.");
+            question = new Question(
+                "Default Answer", 
+                "No question available for this position", 
+                new String[]{"Choice A", "Choice B", "Choice C", "Choice D"}, 
+                0,
+                "General", 
+                100
+            );
+        }
+        
+        String[] qnaStrings = new String[6];
+        qnaStrings[0] = "Category: " + question.getCategory() + " - $" + question.getValue();
+        qnaStrings[1] = "Statement: " + question.getQuestionText();
 
-    String[] choices = question.getChoices();
-    if (choices.length < 4) {
-        choices = Arrays.copyOf(choices, 4);
-        for (int i = 0; i < 4; i++) {
-            if (choices[i] == null || choices[i].isEmpty()) {
-                choices[i] = "Choice " + (char)('A' + i);
+        String[] choices = question.getChoices();
+        if (choices.length < 4) {
+            choices = Arrays.copyOf(choices, 4);
+            for (int i = 0; i < 4; i++) {
+                if (choices[i] == null || choices[i].isEmpty()) {
+                    choices[i] = "Choice " + (char)('A' + i);
+                }
             }
         }
-    }
-    
-    qnaStrings[2] = "A) " + choices[0];
-    qnaStrings[3] = "B) " + choices[1];
-    qnaStrings[4] = "C) " + choices[2];
-    qnaStrings[5] = "D) " + choices[3];
-    
-    gameData.setQnaStrings(qnaStrings);
+        
+        qnaStrings[2] = "A) " + choices[0];
+        qnaStrings[3] = "B) " + choices[1];
+        qnaStrings[4] = "C) " + choices[2];
+        qnaStrings[5] = "D) " + choices[3];
+        
+        gameData.setQnaStrings(qnaStrings);
 
-    ((GUIGameScreen) mainGUI.getGameScreen()).updateQNAScreen();
-    
-    // Debug: Print what we're setting
-    System.out.println("Setting QNA strings:");
-    for (int i = 0; i < qnaStrings.length; i++) {
-        System.out.println(i + ": " + qnaStrings[i]);
+        ((GUIGameScreen) mainGUI.getGameScreen()).updateQNAScreen();
+        
+        // Debug: Print what we're setting
+        System.out.println("Setting QNA strings:");
+        for (int i = 0; i < qnaStrings.length; i++) {
+            System.out.println(i + ": " + qnaStrings[i]);
+        }
+        
+        // Debug: Show which choice is correct
+        System.out.println("Correct answer is at index: " + question.getCorrectIndex() + 
+                        " which is choice: " + (char)('A' + question.getCorrectIndex()));
     }
-    
-    // Debug: Show which choice is correct
-    System.out.println("Correct answer is at index: " + question.getCorrectIndex() + 
-                      " which is choice: " + (char)('A' + question.getCorrectIndex()));
-}
     
     public void submitAnswer(int choiceIndex) {
         if (gameState.getCurrentQuestion() != null && !gameState.isAnswerSubmitted()) {
             boolean correct = gameState.getCurrentQuestion().checkAnswer(choiceIndex);
             gameState.setAnswerSubmitted(true);
             gameState.setAnswerCorrect(correct);
-            
             System.out.println("Answer submitted: " + (correct ? "CORRECT" : "WRONG"));
             System.out.println("Selected choice index: " + choiceIndex + " (" + (char)('A' + choiceIndex) + ")");
             System.out.println("Correct answer index: " + gameState.getCurrentQuestion().getCorrectIndex() + 
@@ -158,12 +174,14 @@ public class GameEngine {
     private void handleCorrectAnswer() {
         updatePlayerScore(gameState.getSelectedRow());
         // Mark question as used
+        ((GUIGameScreen)mainGUI.getGameScreen()).updateItemStatus(gameState.getSelectedRow(), gameState.getSelectedCol(), true);
         gameState.getCurrentQuestion().setUsed(true);
         System.out.println("Correct! Score increased to: $" + gameData.getPlayerScore());
     }
     
     private void handleIncorrectAnswer() {
         decrementHealth();
+        ((GUIGameScreen)mainGUI.getGameScreen()).updateItemStatus(gameState.getSelectedRow(), gameState.getSelectedCol(), false);
         System.out.println("Incorrect! Health decreased to: " + gameData.getPlayerHealth());
     }
 
@@ -209,16 +227,22 @@ public class GameEngine {
     }
 
     // Game Flow Methods
+    public void chooseModule(){
+        mainGUI.showModuleScreen();
+    }
+
     public void startMainGame(){
         updateButtonListeners();
         gameState.setCurrentState(GameState.State.PYRAMID_SCREEN);
         mainGUI.showGameScreen();
         showPyramidScreen();
+        System.out.println("Module: " + gameData.getModuleSelected());
         System.out.println("Game started!");
     }
 
     public void endMainGame(){
         gameState.setCurrentState(GameState.State.END_SCREEN);
+        ((GUIEndScreen)mainGUI.getEndScreen()).updateFinalScore();
         mainGUI.showEndScreen();
         System.out.println("Game ended! Final score: $" + gameData.getPlayerScore());
     }
@@ -231,11 +255,10 @@ public class GameEngine {
     public void restartGame(){
         gameData = new GameData();
         gameState = new GameState();
+        mainGUI.getMainFrame().dispose();
         mainGUI = new MainGUI(gameData);
         playerActionListener = new PlayerActionListener(this);
         addActionListeners();
-        startMainGame();
-        System.out.println("Game restarted!");
     }
 
     // Screen Transition Methods

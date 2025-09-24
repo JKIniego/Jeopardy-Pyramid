@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
 import com.noinc.bloomsjeopardy.model.Question;
 
 public class GameData {
@@ -16,13 +17,15 @@ public class GameData {
     private int playerHealth;
     private int maxPlayerHealth = 3;
     private int playerUnlockedLevels;
-    
+    private int moduleSelected;
+
     private String[][] itemLabels;
     private String[] qnaStrings;
     
     private final int[] levelScores = {100, 200, 300, 400, 500, 600};
     private final String[] categories = {"Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"};
-    
+    private final String[] modules = {"Module 1", "Module 2", "Module 3"};
+
     private List<Question> questions;
     private Random random;
     
@@ -30,6 +33,7 @@ public class GameData {
         this.playerScore = 0;
         this.playerHealth = maxPlayerHealth;
         this.playerUnlockedLevels = 0;
+        this.moduleSelected = -1;
         this.random = new Random();
         this.questions = new ArrayList<>();
         
@@ -146,6 +150,9 @@ public class GameData {
     public void setPlayerHealth(int playerHealth) { this.playerHealth = playerHealth; }
     
     public int getMaxPlayerHealth() { return maxPlayerHealth; }
+
+    public int getModuleSelected() { return moduleSelected;}
+    public void setModuleSelected(int moduleSelected) { this.moduleSelected = moduleSelected;}
     
     public int getPlayerUnlockedLevels() { return playerUnlockedLevels; }
     public void setPlayerUnlockedLevels(int playerUnlockedLevels) { 
@@ -168,6 +175,8 @@ public class GameData {
     public void setQnaStrings(String[] qnaStrings) { this.qnaStrings = qnaStrings; }
     
     public int[] getLevelScores() { return levelScores; }
+
+    public String[] getModules() { return modules; }
     
     public String[] getCategories() { return categories; }
     

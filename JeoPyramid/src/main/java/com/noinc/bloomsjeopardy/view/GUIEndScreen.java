@@ -1,13 +1,10 @@
 package com.noinc.bloomsjeopardy.view;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -17,11 +14,13 @@ import javax.swing.JPanel;
 
 import com.noinc.bloomsjeopardy.data.GameData;
 
-public class GUIEndScreen extends JPanel implements ActionListener, MouseListener {
+public class GUIEndScreen extends JPanel implements MouseListener {
     private JButton restartButton, exitButton;
     private JPanel parentPanel;
-    private GUIBrand brand;
+    private JLabel finalScore;
     private GameData gameData;
+    private GUIBrand brand;
+    
 
     public GUIEndScreen(GameData gameData, JPanel parentPanel, GUIBrand brand) {
         this.parentPanel = parentPanel;
@@ -40,9 +39,19 @@ public class GUIEndScreen extends JPanel implements ActionListener, MouseListene
             }
         };
         
-        JLabel titleLabel = new JLabel("GAME OVER");
+        JLabel titleLabel = new JLabel("GAME OVER!");
+        titleLabel.setForeground(brand.blue);
+        titleLabel.setFont(brand.CustomFontLarge);
+
+        finalScore = new JLabel("$" + gameData.getPlayerScore());
+        finalScore.setForeground(brand.white);
+        finalScore.setFont(brand.CustomFontFinalScore);
+
         restartButton = new JButton("Restart");
         exitButton = new JButton("Exit");
+        
+        restartButton.setActionCommand("EndScreen restartButton");
+        exitButton.setActionCommand("EndScreen exitButton");
 
         brand.buttonHighlight(restartButton);
         brand.buttonTransparent(exitButton);
@@ -50,23 +59,27 @@ public class GUIEndScreen extends JPanel implements ActionListener, MouseListene
         restartButton.addMouseListener(this);
         exitButton.addMouseListener(this);
 
-        restartButton.addActionListener(this);
-        exitButton.addActionListener(this);
-
         endScreenPanel.setLayout(new GridBagLayout());
         GridBagConstraints endScreenGBC = new GridBagConstraints();
         endScreenGBC.gridx = 0;
         endScreenGBC.gridy = 0;
-        endScreenGBC.ipady = 100;
-        endScreenGBC.insets = new Insets(0, 0, 30, 0);
+        endScreenGBC.ipady = 70;
+        endScreenGBC.insets = new Insets(0, 0, 0, 0);
         endScreenPanel.add(titleLabel, endScreenGBC);
         endScreenGBC.gridx = 0;
         endScreenGBC.gridy = 1;
-        endScreenGBC.ipadx = 150;
+        endScreenGBC.ipadx = 00;
         endScreenGBC.ipady = 30;
-        endScreenPanel.add(restartButton, endScreenGBC);
+        endScreenGBC.insets = new Insets(0, 0, 70, 0);
+        endScreenPanel.add(finalScore, endScreenGBC);
         endScreenGBC.gridx = 0;
         endScreenGBC.gridy = 2;
+        endScreenGBC.ipadx = 70;
+        endScreenGBC.ipady = 30;
+        endScreenGBC.insets = new Insets(0, 0, 30, 0);
+        endScreenPanel.add(restartButton, endScreenGBC);
+        endScreenGBC.gridx = 0;
+        endScreenGBC.gridy = 3;
         endScreenGBC.ipadx = 150;
         endScreenGBC.ipady = 30;
         endScreenPanel.add(exitButton, endScreenGBC);
@@ -74,18 +87,9 @@ public class GUIEndScreen extends JPanel implements ActionListener, MouseListene
         this.add(endScreenPanel, BorderLayout.CENTER);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object src = e.getSource();
-
-        if (src == restartButton) {
-            CardLayout cl = (CardLayout) parentPanel.getLayout();
-            cl.show(parentPanel, "GameScreen");
-        } else if (src == exitButton) {
-            System.exit(0);
-        }
+    public void updateFinalScore(){
+        finalScore.setText("$"+gameData.getPlayerScore());
     }
-
 
     @Override
     public void mouseEntered(MouseEvent e) {

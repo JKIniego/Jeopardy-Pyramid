@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -23,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.OverlayLayout;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -30,7 +33,7 @@ import javax.swing.text.StyledDocument;
 import com.noinc.bloomsjeopardy.data.GameData;
 
 public class GUIGameScreen extends JPanel implements MouseListener  {
-    private JPanel parentPanel, mainGamePanel, hudPanel, livesPanel, screen1, screen2, screensContainer;
+    private JPanel parentPanel, mainGamePanel, hudPanel, livesPanel, screen1, screen2, screensContainer, choiceA, choiceB, choiceC, choiceD;
     private JButton menuButton, screen2BackButton;
     private JLabel scoreLabel;
     private JButton[][] itemButtonsArray;
@@ -117,6 +120,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         menuButton.setActionCommand("GameScreen menuButton");
         menuButton.addMouseListener(this);
         menuButton.setPreferredSize(new Dimension(20, 20));
+        menuButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         JPanel menuButtonPanel = new JPanel();
         menuButtonPanel.setLayout(new BoxLayout(menuButtonPanel, BoxLayout.X_AXIS));
         menuButtonPanel.setOpaque(false);
@@ -157,6 +161,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                 itemButton.setPreferredSize(new Dimension(170, 53));
                 itemButton.setForeground(Color.WHITE);
                 itemButton.setFont(brand.CustomFontMedium);
+                itemButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
                 itemButton.setActionCommand("GameScreen pyramidButton");
                 itemButton.putClientProperty("type", "pyramidButton");
@@ -197,10 +202,10 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         JPanel categoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
         JPanel statementPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
         JPanel choiceContainerPanel = new JPanel(new GridLayout(2,2));
-        JPanel choiceAPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
-        JPanel choiceBPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
-        JPanel choiceCPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
-        JPanel choiceDPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
+        JPanel choiceAPanel = new JPanel();
+        JPanel choiceBPanel = new JPanel();
+        JPanel choiceCPanel = new JPanel();
+        JPanel choiceDPanel = new JPanel();
 
         choiceContainerPanel.setOpaque(false);
         choiceContainerPanel.add(choiceAPanel);
@@ -215,22 +220,33 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         choiceCPanel.setBackground(brand.black);
         choiceDPanel.setBackground(brand.black);
 
-        categoryPanel.setBorder(BorderFactory.createMatteBorder(0,0, 8, 0, brand.blue));
-        statementPanel.setBorder(BorderFactory.createMatteBorder(0,0, 8, 0, brand.blue));
+        choiceAPanel.setLayout(new OverlayLayout(choiceAPanel));
+        choiceBPanel.setLayout(new OverlayLayout(choiceBPanel));
+        choiceCPanel.setLayout(new OverlayLayout(choiceCPanel));
+        choiceDPanel.setLayout(new OverlayLayout(choiceDPanel));
+
+        categoryPanel.setBorder(BorderFactory.createEmptyBorder(10,0, 10, 50));
+        statementPanel.setBorder(BorderFactory.createMatteBorder(8,0, 8, 0, brand.blue));
         choiceAPanel.setBorder(BorderFactory.createMatteBorder(0,0, 4, 4, brand.blue));
         choiceBPanel.setBorder(BorderFactory.createMatteBorder(0,4, 4, 0, brand.blue));
         choiceCPanel.setBorder(BorderFactory.createMatteBorder(4,0, 0, 4, brand.blue));
         choiceDPanel.setBorder(BorderFactory.createMatteBorder(4,4, 0, 0, brand.blue));
 
-        choiceAPanel.addMouseListener(this);
-        choiceBPanel.addMouseListener(this);
-        choiceCPanel.addMouseListener(this);
-        choiceDPanel.addMouseListener(this);
-
         choiceAPanel.setName("choice1");
         choiceBPanel.setName("choice2");
         choiceCPanel.setName("choice3");
         choiceDPanel.setName("choice4");
+
+        screen2BackButton = new JButton("<");
+        screen2BackButton.setActionCommand("GameScreen screen2BackButton");
+        screen2BackButton.setFont(brand.CustomFontMedium);
+        screen2BackButton.setForeground(brand.white);
+        screen2BackButton.setContentAreaFilled(false);
+        screen2BackButton.setBorderPainted(false);
+        screen2BackButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        JLabel bufferLabel = new JLabel("");
+        bufferLabel.setFont(brand.CustomFontExtraSmall);
+        categoryPanel.setLayout(new BorderLayout());
 
         categoryLabel = makeStyledLabel(0, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
         statementLabel = makeStyledLabel(0, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
@@ -239,8 +255,47 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         choiceCLabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
         choiceDLabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 0.7f, StyleConstants.ALIGN_CENTER);
         
-        categoryPanel.add(categoryLabel);
+        choiceA = new JPanel();
+        choiceB = new JPanel();
+        choiceC = new JPanel();
+        choiceD = new JPanel();
+
+        choiceAPanel.setName("choice1");
+        choiceBPanel.setName("choice2");
+        choiceCPanel.setName("choice3");
+        choiceDPanel.setName("choice4");
+
+        
+        choiceA.addMouseListener(this);
+        choiceB.addMouseListener(this);
+        choiceC.addMouseListener(this);
+        choiceD.addMouseListener(this);
+
+        choiceA.putClientProperty("index", 0);
+        choiceB.putClientProperty("index", 1);
+        choiceC.putClientProperty("index", 2);
+        choiceD.putClientProperty("index", 3);
+
+        choiceA.setOpaque(false);
+        choiceB.setOpaque(false);
+        choiceC.setOpaque(false);
+        choiceD.setOpaque(false);
+
+        choiceA.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        choiceB.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        choiceC.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        choiceD.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+
+        categoryPanel.add(screen2BackButton, BorderLayout.WEST);
+        categoryPanel.add(bufferLabel, BorderLayout.EAST);
+        categoryPanel.add(categoryLabel, BorderLayout.CENTER);
         statementPanel.add(statementLabel);
+        
+        choiceAPanel.add(choiceA);
+        choiceBPanel.add(choiceB);
+        choiceCPanel.add(choiceC);
+        choiceDPanel.add(choiceD);
         choiceAPanel.add(choiceALabel);
         choiceBPanel.add(choiceBLabel);
         choiceCPanel.add(choiceCLabel);
@@ -262,10 +317,6 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         qnaPanel.add(choiceContainerPanel, qnaPanelGBC);
 
         screen2.add(qnaPanel);
-
-        screen2BackButton = new JButton("Back");
-        screen2BackButton.setActionCommand("GameScreen screen2BackButton");
-        categoryPanel.add(screen2BackButton);
 
         updateQNAScreen();
     }
@@ -321,19 +372,21 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         choiceDLabel.repaint();
     }
 
-    public void updateLevels(){
+    public void updateLevels() {
         int levelUnlocked = gameData.getPlayerUnlockedLevels();
-        // Lock/Unlock Levels
+
         for (int row = 0; row < itemButtonsArray.length; row++) {
             for (int col = 0; col < itemButtonsArray[row].length; col++) {
-                if(row <= levelUnlocked){
+                
+                if (row == levelUnlocked) { 
                     itemButtonsArray[row][col].setEnabled(true);
                     itemButtonsArray[row][col].setForeground(brand.white);
 
                     if (!Arrays.asList(itemButtonsArray[row][col].getMouseListeners()).contains(this)) {
                         itemButtonsArray[row][col].addMouseListener(this);
                     }
-                }else{
+
+                } else if (row > levelUnlocked) { 
                     itemButtonsArray[row][col].removeMouseListener(this);
                     itemButtonsArray[row][col].setForeground(brand.gray);
                 }
@@ -352,6 +405,14 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         }
         repaint();
         revalidate();
+    }
+
+    public void updateItemStatus(int row, int col, Boolean isCorrect){
+        if (isCorrect){
+            itemButtonsArray[row][col].setForeground(brand.green);
+        } else if (!isCorrect){
+            itemButtonsArray[row][col].setForeground(brand.red);
+        }
     }
 
     public void showScreen1(){
@@ -378,8 +439,12 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                 );
             }
         } else if (src instanceof JPanel) {
-            JPanel panel = (JPanel) src;
-            panel.setBackground(brand.darkBlue);
+            JPanel overlay = (JPanel) src;
+            Container parent = overlay.getParent(); 
+            if (parent instanceof JPanel) {
+                JPanel choicePanel = (JPanel) parent;
+                choicePanel.setBackground(brand.darkBlue);  
+            }
         }
     }
 
@@ -394,23 +459,25 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                 itemButtonsArray[row][col].setBorder(null);
             }
         }else if (src instanceof JPanel) {
-            JPanel panel = (JPanel) src;
-            panel.setBackground(brand.black);
+            JPanel overlay = (JPanel) src;
+            Container parent = overlay.getParent(); 
+            if (parent instanceof JPanel) {
+                JPanel choicePanel = (JPanel) parent;
+                choicePanel.setBackground(brand.black);  
+            }
         }
     }
 
     @Override public void mouseClicked(MouseEvent e) {}
     @Override public void mousePressed(MouseEvent e) {}
     @Override public void mouseReleased(MouseEvent e) {}
-    
-    public JButton getMenuButton(){
-        return menuButton;
-    }
-    public JButton getScreen2BackButton(){
-        return screen2BackButton;
-    }
 
-    public JButton[][] getItemButtonsArray(){
-        return itemButtonsArray;
-    }
+    // Getters and Setters
+    public JButton getMenuButton(){return menuButton;}
+    public JButton getScreen2BackButton(){return screen2BackButton;}
+    public JButton[][] getItemButtonsArray(){return itemButtonsArray;}
+    public JPanel getChoiceA(){return choiceA;}
+    public JPanel getChoiceB(){return choiceB;}
+    public JPanel getChoiceC(){return choiceC;}
+    public JPanel getChoiceD(){return choiceD;}
 }
