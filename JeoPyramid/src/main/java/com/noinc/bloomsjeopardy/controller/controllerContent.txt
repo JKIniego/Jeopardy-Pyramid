@@ -1,4 +1,4 @@
-This should act as the bridge beetween Model and the View. 
+This should act as the bridge between Model and the View.
 e.g. 
 GameEngine.java - central controller. should manage the game flow, updates the GameState, processes answers
 and tells the view what to display

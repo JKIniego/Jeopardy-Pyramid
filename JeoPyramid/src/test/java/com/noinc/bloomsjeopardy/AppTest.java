@@ -1,20 +1,20 @@
 package com.noinc.bloomsjeopardy;
 
-import static org.junit.Assert.assertTrue;
-
+import com.noinc.bloomsjeopardy.controller.GameEngine;
 import org.junit.Test;
+import org.mockito.MockedConstruction;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-{
-    /**
-     * Rigorous Test :-)
-     */
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.verify;
+
+public class AppTest {
+
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void main(){
+        try (MockedConstruction<GameEngine> mocked = mockConstruction(GameEngine.class)) {
+            assertDoesNotThrow(() -> App.main(new String[]{}));
+            verify(mocked.constructed().getFirst()).addActionListeners();
+        }
     }
 }
