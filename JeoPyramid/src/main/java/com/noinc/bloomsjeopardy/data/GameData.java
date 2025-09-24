@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
 import com.noinc.bloomsjeopardy.model.Question;
 
 public class GameData {
@@ -18,14 +17,13 @@ public class GameData {
     private int maxPlayerHealth = 3;
     private int playerUnlockedLevels;
     private int moduleSelected;
-
     private String[][] itemLabels;
     private String[] qnaStrings;
     
     private final int[] levelScores = {100, 200, 300, 400, 500, 600};
     private final String[] categories = {"Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"};
     private final String[] modules = {"Module 1", "Module 2", "Module 3"};
-
+    
     private List<Question> questions;
     private Random random;
     
@@ -33,7 +31,7 @@ public class GameData {
         this.playerScore = 0;
         this.playerHealth = maxPlayerHealth;
         this.playerUnlockedLevels = 0;
-        this.moduleSelected = -1;
+        this.moduleSelected = 0; // Default to Module 1 instead of -1
         this.random = new Random();
         this.questions = new ArrayList<>();
         
@@ -43,24 +41,27 @@ public class GameData {
     
     private void initializeItemLabels() {
         itemLabels = new String[][] {
-            {"$100", "$100", "$100", "$100", "$100", "$100"},  
-            {"$200", "$200", "$200", "$200", "$200"},          
-            {"$300", "$300", "$300", "$300"},                  
-            {"$400", "$400", "$400"},                          
-            {"$500", "$500"},                                  
-            {"$600"}                                           
+            {"$100", "$100", "$100", "$100", "$100", "$100"},
+            {"$200", "$200", "$200", "$200", "$200"},
+            {"$300", "$300", "$300", "$300"},
+            {"$400", "$400", "$400"},
+            {"$500", "$500"},
+            {"$600"}
         };
     }
     
     private void loadQuestionsFromCSV() {
+        String modulePath = "/data/" + modules[moduleSelected] + "/";
         String[] csvFiles = {
-            "/data/Module 1/Knowledge.csv",
-            "/data/Module 1/Comprehension.csv", 
-            "/data/Module 1/Application.csv",
-            "/data/Module 1/Analysis.csv",
-            "/data/Module 1/Synthesis.csv",
-            "/data/Module 1/Evaluation.csv"
+            modulePath + "Knowledge.csv",
+            modulePath + "Comprehension.csv", 
+            modulePath + "Application.csv",
+            modulePath + "Analysis.csv",
+            modulePath + "Synthesis.csv",
+            modulePath + "Evaluation.csv"
         };
+
+        questions.clear();
         
         for (int i = 0; i < csvFiles.length; i++) {
             String category = categories[i];
@@ -71,42 +72,55 @@ public class GameData {
                 while ((line = reader.readLine()) != null) {
                     String[] parts = line.split("#");
                     if (parts.length >= 5) {
-                        String statement = parts[0].trim(); // The statement
-                        String correctAnswer = parts[1].trim(); // The correct question choice
+                        String statement = parts[0].trim();
+                        String correctAnswer = parts[1].trim();
                         String[] wrongAnswers = new String[]{
-                            parts[2].trim(), 
-                            parts[3].trim(), 
+                            parts[2].trim(),
+                            parts[3].trim(),
                             parts[4].trim()
                         };
                         
-                        // Combine all answers and shuffle them
                         List<String> allAnswers = new ArrayList<>();
                         allAnswers.add(correctAnswer);
                         allAnswers.addAll(Arrays.asList(wrongAnswers));
                         Collections.shuffle(allAnswers);
                         
-                        // Find the index of the correct answer after shuffling
                         int correctIndex = allAnswers.indexOf(correctAnswer);
                         
                         Question question = new Question(
-                            correctAnswer, // Store the correct answer text
-                            statement, // Use the statement as the main display text
-                            allAnswers.toArray(new String[0]), // All shuffled choices
-                            correctIndex, // Store the index of the correct answer
+                            correctAnswer,
+                            statement,
+                            allAnswers.toArray(new String[0]),
+                            correctIndex,
                             category,
-                            levelScores[i] // Assign score based on row (category)
+                            levelScores[i]
                         );
                         questions.add(question);
                     }
                 }
             } catch (IOException | NullPointerException e) {
                 System.err.println("Error loading CSV file: " + csvFiles[i]);
+                System.err.println("Trying fallback to Module 1...");
+
+                if (moduleSelected != 0) {
+                    moduleSelected = 0;
+                    loadQuestionsFromCSV();
+                    return;
+                }
                 e.printStackTrace();
             }
         }
         
-        // Shuffle questions to ensure random distribution
         Collections.shuffle(questions);
+        System.out.println("Loaded " + questions.size() + " questions from " + modules[moduleSelected]);
+    }
+    
+    // Reload questions when module changes
+    public void reloadQuestionsForModule(int newModule) {
+        if (newModule >= 0 && newModule < modules.length) {
+            this.moduleSelected = newModule;
+            loadQuestionsFromCSV();
+        }
     }
     
     public Question getRandomQuestion(String category, int level) {
@@ -122,7 +136,7 @@ public class GameData {
         if (!filteredQuestions.isEmpty()) {
             return filteredQuestions.get(random.nextInt(filteredQuestions.size()));
         }
-
+        
         for (Question q : questions) {
             if (q.getValue() == levelScores[level]) {
                 filteredQuestions.add(q);
@@ -130,10 +144,10 @@ public class GameData {
         }
         
         return filteredQuestions.isEmpty() ? 
-            new Question("Default Answer", "Default Statement", 
-                        new String[]{"Choice A", "Choice B", "Choice C", "Choice D"}, 
-                        0, 
-                        "General", 100) 
+            new Question("Default Answer", "Default Statement",
+                        new String[]{"Choice A", "Choice B", "Choice C", "Choice D"},
+                        0,
+                        "General", 100)
             : filteredQuestions.get(random.nextInt(filteredQuestions.size()));
     }
     
@@ -150,9 +164,12 @@ public class GameData {
     public void setPlayerHealth(int playerHealth) { this.playerHealth = playerHealth; }
     
     public int getMaxPlayerHealth() { return maxPlayerHealth; }
-
-    public int getModuleSelected() { return moduleSelected;}
-    public void setModuleSelected(int moduleSelected) { this.moduleSelected = moduleSelected;}
+    
+    public int getModuleSelected() { return moduleSelected; }
+    public void setModuleSelected(int moduleSelected) { 
+        this.moduleSelected = moduleSelected;
+        reloadQuestionsForModule(moduleSelected);
+    }
     
     public int getPlayerUnlockedLevels() { return playerUnlockedLevels; }
     public void setPlayerUnlockedLevels(int playerUnlockedLevels) { 
@@ -175,7 +192,7 @@ public class GameData {
     public void setQnaStrings(String[] qnaStrings) { this.qnaStrings = qnaStrings; }
     
     public int[] getLevelScores() { return levelScores; }
-
+    
     public String[] getModules() { return modules; }
     
     public String[] getCategories() { return categories; }
