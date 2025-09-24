@@ -55,7 +55,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "ModuleScreen moduleButton" -> {
                     System.out.println("Module button clicked");
-                    int moduleChosen = (int) btn.getClientProperty("module"); 
+                    int moduleChosen = (int) btn.getClientProperty("module");
                     gameEngine.getGameData().setModuleSelected(moduleChosen);
                     gameEngine.startMainGame();
                 }
