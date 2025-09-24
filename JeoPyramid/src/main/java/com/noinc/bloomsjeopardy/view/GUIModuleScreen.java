@@ -96,7 +96,7 @@ public class GUIModuleScreen extends JPanel implements MouseListener{
             button.setBackground(brand.black);
             button.setFont(brand.CustomFontSmall);
             button.setActionCommand("ModuleScreen moduleButton");
-            button.putClientProperty("module", i+1); // change to 1-base
+            button.putClientProperty("module", i);
             button.addMouseListener(this);
             button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             moduleButtonsPanelGBC.insets = new Insets(0, 0, 10, 0);
