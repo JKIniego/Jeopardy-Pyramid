@@ -1,8 +1,8 @@
 package com.noinc.bloomsjeopardy.controller;
 
 import java.util.Arrays;
+
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
 
 import com.noinc.bloomsjeopardy.data.GameData;
 import com.noinc.bloomsjeopardy.model.GameState;
@@ -43,6 +43,9 @@ public class GameEngine {
         ((GUIModuleScreen) mainGUI.getModuleScreen()).getModuleBackButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getScreen2BackButton().addActionListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getMenuResumeButton().addActionListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getMenuRestartButton().addActionListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getMenuExitButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceA().addMouseListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceB().addMouseListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceC().addMouseListener(playerActionListener);
@@ -235,6 +238,16 @@ public class GameEngine {
         mainGUI.showModuleScreen();
     }
 
+    public void showMenuPopUp(){
+        ((GUIGameScreen) mainGUI.getGameScreen()).showMenuDialog();
+    }
+
+    public void showConfirmationDialog(int choice){
+        if (((GUIGameScreen) mainGUI.getGameScreen()).showConfirmationDialog("Is that your final answer?")){
+            submitAnswer(choice);
+        }
+    }
+
     public void startMainGame(){
         updateButtonListeners();
         gameState.setCurrentState(GameState.State.PYRAMID_SCREEN);
@@ -263,6 +276,10 @@ public class GameEngine {
         mainGUI = new MainGUI(gameData);
         playerActionListener = new PlayerActionListener(this);
         addActionListeners();
+    }
+
+    public void resumeGame(){
+        ((GUIGameScreen) mainGUI.getGameScreen()).hideMenuDialog();
     }
 
     public void showPyramidScreen(){

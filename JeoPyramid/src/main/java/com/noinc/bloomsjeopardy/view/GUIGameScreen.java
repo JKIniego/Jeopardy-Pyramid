@@ -6,13 +6,17 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
@@ -22,10 +26,12 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.OverlayLayout;
+import javax.swing.SwingUtilities;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -33,12 +39,13 @@ import javax.swing.text.StyledDocument;
 import com.noinc.bloomsjeopardy.data.GameData;
 
 public class GUIGameScreen extends JPanel implements MouseListener  {
-    private JPanel parentPanel, mainGamePanel, hudPanel, livesPanel, screen1, screen2, screensContainer, choiceA, choiceB, choiceC, choiceD;
-    private JButton menuButton, screen2BackButton;
+    private JPanel parentPanel, mainGamePanel, hudPanel, menuPanel, overlayMenu, livesPanel, screen1, screen2, screensContainer, choiceA, choiceB, choiceC, choiceD;
+    private JButton menuButton, menuResumeButton, menuRestartButton, menuExitButton, screen2BackButton, yesButton, noButton;
     private JLabel scoreLabel;
     private JButton[][] itemButtonsArray;
     private GUIBrand brand;
     private GameData gameData;
+    private boolean isAnswerLocked;
 
     private JTextPane categoryLabel, statementLabel, choiceALabel, choiceBLabel, choiceCLabel, choiceDLabel;
     
@@ -49,6 +56,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         this.setLayout(new BorderLayout());
         
         initializeMainContentPanel();
+        initializeMenuPanel();
         initializeHUDPanel();
         initializeScreen1();
         initializeScreen2();
@@ -68,7 +76,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         mainGamePanelGBC.weighty = 0.8;
         mainGamePanelGBC.gridy = 1;
         mainGamePanel.add(screensContainer, mainGamePanelGBC);
-
+        this.add(mainGamePanel);
     }
 
     private void initializeMainContentPanel(){
@@ -80,8 +88,55 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
             }
         };
         mainGamePanel.setLayout(new GridBagLayout());
-        this.add(mainGamePanel);
-        parentPanel.add(this);
+    }
+
+    private void initializeMenuPanel(){
+        menuPanel = new JPanel();
+        menuPanel.setBackground(brand.black);
+        menuPanel.setBorder(BorderFactory.createLineBorder(brand.blue, 8));
+        menuPanel.setLayout(new GridBagLayout());
+        menuPanel.setPreferredSize(new Dimension(300, 300));
+
+        menuResumeButton = new JButton("Resume");
+        menuRestartButton = new JButton("Restart");
+        menuExitButton = new JButton("Exit");
+
+        menuResumeButton.setBackground(brand.black);
+        menuRestartButton.setBackground(brand.black);
+        menuExitButton.setBackground(brand.black);
+        menuResumeButton.setForeground(brand.white);
+        menuRestartButton.setForeground(brand.white);
+        menuExitButton.setForeground(brand.white);
+        menuResumeButton.setFont(brand.CustomFontSmall);
+        menuRestartButton.setFont(brand.CustomFontSmall);
+        menuExitButton.setFont(brand.CustomFontSmall);
+        menuResumeButton.setBorderPainted(false);
+        menuRestartButton.setBorderPainted(false);
+        menuExitButton.setBorderPainted(false);
+        menuResumeButton.setFocusable(false);
+        menuRestartButton.setFocusable(false);
+        menuExitButton.setFocusable(false);
+        menuResumeButton.addMouseListener(this);
+        menuRestartButton.addMouseListener(this);
+        menuExitButton.addMouseListener(this);
+        menuResumeButton.setPreferredSize(new Dimension(200, 30));
+        menuRestartButton.setPreferredSize(new Dimension(200, 30));
+        menuExitButton.setPreferredSize(new Dimension(200, 30));
+
+        menuResumeButton.setActionCommand("GameScreen menuResumeButton");
+        menuRestartButton.setActionCommand("GameScreen menuRestartButton");
+        menuExitButton.setActionCommand("GameScreen menuExitButton");
+
+        GridBagConstraints menuPanelGBC = new GridBagConstraints();
+        menuPanelGBC.insets = new Insets(0, 0, 20, 0);
+        menuPanelGBC.gridy = 0;
+        menuPanelGBC.ipadx = 0;
+        menuPanelGBC.ipady = 5;
+        menuPanel.add(menuResumeButton, menuPanelGBC);
+        menuPanelGBC.gridy = 1;
+        menuPanel.add(menuRestartButton, menuPanelGBC);
+        menuPanelGBC.gridy = 2;
+        menuPanel.add(menuExitButton, menuPanelGBC);
     }
 
     private void initializeHUDPanel(){
@@ -439,6 +494,8 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
             }
         }
 
+        isAnswerLocked = true;
+
         choiceAParent.repaint();
         choiceBParent.repaint();
         choiceCParent.repaint();
@@ -446,6 +503,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     }
 
     private void resetChoicePanels() {
+        isAnswerLocked = false;
         Container choiceAParent = choiceA.getParent();
         Container choiceBParent = choiceB.getParent();
         Container choiceCParent = choiceC.getParent();
@@ -469,6 +527,124 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         cl.show(screensContainer, "screen2");
     }
 
+    public void repaintMenuButtons(JButton button){
+        JButton buttons[] = {menuResumeButton, menuRestartButton, menuExitButton};
+        for (int i = 0; i<buttons.length; i++){
+            buttons[i].setBackground(brand.black);
+        }
+        button.setBackground(brand.blue);
+    }
+
+    public boolean showConfirmationDialog(String message) {
+        final boolean[] result = {false};
+        if (!isAnswerLocked){
+            Window parentWindow = SwingUtilities.getWindowAncestor(this);
+            JDialog dialog = new JDialog(parentWindow, "Confirm", Dialog.ModalityType.APPLICATION_MODAL);
+            dialog.setUndecorated(true);
+            dialog.setLayout(new BorderLayout());
+            dialog.setSize(500, 200);
+            dialog.setLocationRelativeTo(parentWindow);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+            JPanel confirmationPanel = new JPanel();
+            confirmationPanel.setLayout(new GridBagLayout());
+            confirmationPanel.setBackground(brand.black);
+            confirmationPanel.setBorder(BorderFactory.createLineBorder(brand.blue, 8));
+
+            JLabel label = new JLabel(message, JLabel.CENTER);
+            label.setFont(brand.CustomFontExtraSmall);
+            label.setForeground(brand.white);
+
+            yesButton = new JButton("Yes");
+            noButton = new JButton("No");
+
+            yesButton.setBackground(brand.blue);
+            noButton.setBackground(brand.black);
+            yesButton.setBorderPainted(false);
+            noButton.setBorderPainted(false);
+            yesButton.setFocusPainted(false);
+            noButton.setFocusPainted(false);
+            yesButton.setPreferredSize(new Dimension(100, 20));
+            noButton.setPreferredSize(new Dimension(100, 20));
+            yesButton.putClientProperty("type", "confirmation yes");
+            noButton.putClientProperty("type", "confirmation no");
+            yesButton.addMouseListener(this);
+            noButton.addMouseListener(this);
+            yesButton.setFont(brand.CustomFontExtraSmall);
+            noButton.setFont(brand.CustomFontExtraSmall);
+            yesButton.setForeground(brand.white);
+            noButton.setForeground(brand.white);
+
+            yesButton.addActionListener(e -> {
+                result[0] = true;
+                dialog.dispose();
+            });
+            noButton.addActionListener(e -> {
+                result[0] = false;
+                dialog.dispose();
+            });
+
+            JPanel buttonPanel = new JPanel(new FlowLayout());
+            buttonPanel.setOpaque(false);
+            buttonPanel.add(yesButton);
+            buttonPanel.add(noButton);
+
+            GridBagConstraints confirmGBC = new GridBagConstraints();
+            confirmGBC.insets = new Insets(0, 0, 40, 0);
+            confirmGBC.gridy = 0;
+            confirmGBC.ipady = 0;
+            confirmationPanel.add(label, confirmGBC);
+            confirmGBC.insets = new Insets(0, 0, 10, 0);
+            confirmGBC.gridy = 1;
+            confirmationPanel.add(buttonPanel, confirmGBC);
+
+            dialog.add(confirmationPanel, BorderLayout.CENTER);
+
+            dialog.setVisible(true);
+            return result[0];
+        }
+        return result[0];
+    }
+
+    public void showMenuDialog(){
+        System.out.println("Menu Shown");
+        overlayMenu = new JPanel(new GridBagLayout());
+        overlayMenu.setBackground(new Color(0, 0, 0, 150));
+        overlayMenu.setOpaque(true);
+
+        overlayMenu.add(menuPanel);
+
+        parentPanel.setLayout(new OverlayLayout(parentPanel));
+        parentPanel.add(overlayMenu, 0);
+
+        overlayMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getSource() == overlayMenu) {
+                    hideMenuDialog();
+                }
+            }
+        });
+
+        menuPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                e.consume();
+            }
+        });
+
+        parentPanel.revalidate();
+        parentPanel.repaint();
+    }
+
+    public void hideMenuDialog(){
+        if (overlayMenu != null && overlayMenu.getParent() != null) {
+            parentPanel.remove(overlayMenu);
+            parentPanel.revalidate();
+            parentPanel.repaint();
+        }
+    }
+    
     @Override 
     public void mouseEntered(MouseEvent e) {
         Object src = e.getSource();
@@ -481,7 +657,18 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                     BorderFactory.createLineBorder(brand.lightBlue, 8)
                 );
             }
-        } else if (src instanceof JPanel) {
+            else if ("confirmation yes".equals(clicked.getClientProperty("type"))){
+                yesButton.setBackground(brand.blue);
+                noButton.setBackground(brand.black);
+            }
+            else if ("confirmation no".equals(clicked.getClientProperty("type"))){
+                noButton.setBackground(brand.blue);
+                yesButton.setBackground(brand.black);
+            }
+            else{
+                repaintMenuButtons((JButton) src);
+            }
+        } else if (src instanceof JPanel && !isAnswerLocked) {
             JPanel overlay = (JPanel) src;
             Container parent = overlay.getParent(); 
             if (parent instanceof JPanel) {
@@ -501,7 +688,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                 int col = (int) clicked.getClientProperty("col");
                 itemButtonsArray[row][col].setBorder(null);
             }
-        }else if (src instanceof JPanel) {
+        }else if (src instanceof JPanel && !isAnswerLocked) {
             JPanel overlay = (JPanel) src;
             Container parent = overlay.getParent(); 
             if (parent instanceof JPanel) {
@@ -517,6 +704,9 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
 
     // Getters and Setters
     public JButton getMenuButton(){return menuButton;}
+    public JButton getMenuResumeButton(){return menuResumeButton;}
+    public JButton getMenuRestartButton(){return menuRestartButton;}
+    public JButton getMenuExitButton(){return menuExitButton;}
     public JButton getScreen2BackButton(){return screen2BackButton;}
     public JButton[][] getItemButtonsArray(){return itemButtonsArray;}
     public JPanel getChoiceA(){return choiceA;}

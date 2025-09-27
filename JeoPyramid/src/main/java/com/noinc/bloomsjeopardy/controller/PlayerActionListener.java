@@ -27,7 +27,6 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 case "StartScreen playButton" -> {
                     System.out.println("Play button clicked");
                     gameEngine.chooseModule();
-                    //gameEngine.startMainGame();
                 }
                 case "StartScreen exitButton" -> {
                     System.out.println("Exit button clicked");
@@ -39,7 +38,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "GameScreen menuButton" -> {
                     System.out.println("Menu button clicked");
-                    gameEngine.decrementHealth(); // Temporary
+                    gameEngine.showMenuPopUp();
                 }
                 case "GameScreen screen2BackButton" -> {
                     System.out.println("Back button clicked");
@@ -59,6 +58,18 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                     gameEngine.getGameData().setModuleSelected(moduleChosen);
                     gameEngine.startMainGame();
                 }
+                case "GameScreen menuResumeButton" -> {
+                    System.out.println("Resume button clicked");
+                    gameEngine.resumeGame();
+                }
+                case "GameScreen menuRestartButton" -> {
+                    System.out.println("Restart button clicked");
+                    gameEngine.restartGame();
+                }
+                case "GameScreen menuExitButton" -> {
+                    System.out.println("Exit button clicked");
+                    gameEngine.terminateGame();
+                }
                 case "GameScreen pyramidButton" -> {
                     int row = (int) btn.getClientProperty("row");
                     int col = (int) btn.getClientProperty("col");
@@ -68,17 +79,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                     gameEngine.unlockNextLevel(); // temporary for testing purposes
                 }
                 default -> {
-                    // Check if this is one of the choice panels
-                    if (src instanceof JPanel) {
-                        JPanel panel = (JPanel) src;
-                        String panelName = panel.getName();
-                        if (panelName != null && panelName.startsWith("choice")) {
-                            int choiceIndex = Integer.parseInt(panelName.substring(6)) - 1; // choice1 -> 0, etc.
-                            System.out.println("Choice panel clicked: " + panelName + " -> index " + choiceIndex);
-                            gameEngine.submitAnswer(choiceIndex);
-                            gameEngine.showPyramidScreen();
-                        }
-                    }
+                    System.out.println("Player Action Listener reached default");
                 }
             }
         }
@@ -92,7 +93,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
             JPanel panel = (JPanel) src;
             System.out.println("Panel clicked: " + panel.getName());
             int answerIndex = (int) panel.getClientProperty("index");
-            gameEngine.submitAnswer(answerIndex);
+            gameEngine.showConfirmationDialog(answerIndex);
         }
     }
 
