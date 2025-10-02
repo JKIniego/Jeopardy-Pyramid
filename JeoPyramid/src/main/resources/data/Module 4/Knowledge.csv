@@ -1,0 +1,10 @@
+The ability of an AI system to improve performance over time based on experience is called this.#What is machine learning?#What is data mining?#What is ensemble learning?#What is representation learning?
+The application of machine learning methods to large databases is called this.#What is data mining?#What is knowledge representation?#What is clustering?#What is supervised learning?
+This application of machine learning involves predicting whether a customer will repay a loan.#What is credit scoring?#What is clustering?#What is basket analysis?#What is reinforcement learning?
+An ensemble method that trains multiple learners and combines them is referred to as this.#What is ensemble learning?#What is reinforcement learning?#What is supervised learning?#What is online learning?
+Base learners in ensemble methods are also referred to as this when they perform only slightly better than random guessing.#What are weak learners?#What are strong learners?#What are deep learners?#What are standard learners?
+One of the earliest ensemble methods that proved weak learners could be boosted to strong learners is known as this.#What is AdaBoost?#What is bagging?#What is random forest#What is soft voting?
+A combination method that directly averages the outputs of individual learners is called this.#What is simple averaging?#What is weighted voting?#What is majority voting?#What is stacking?
+This voting method outputs the class label that receives the most votes, regardless of whether it exceeds half.#What is plurality voting?#What is majority voting?#What is weighted voting?#What is soft voting?
+It initially contains basic knowledge that is similar to a database.#What is knowledge base?#What is learning element?#What is performance element?#What is feedback element?
+This type of learning is achieved through repetition of activities.#What is rote learning?#What is direct instruction?#What is learning by apology?#What is learning by deduction?
