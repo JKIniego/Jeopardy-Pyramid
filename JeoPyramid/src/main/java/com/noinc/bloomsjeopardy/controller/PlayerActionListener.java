@@ -34,7 +34,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "StartScreen howToPlayButton" -> {
                     System.out.println("How to Play button clicked");
-                    //gameEngine.showHowToPlay();
+                    gameEngine.showHowToPlay();
                 }
                 case "StartScreen aboutUsButton" -> {
                     System.out.println("About Us button clicked");
@@ -42,6 +42,10 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "AboutUs backButton" -> {
                     System.out.println("About Us back button clicked");
+                    gameEngine.getMainGUI().showStartScreen();
+                }
+                case "HowToPlay backButton" -> {
+                    System.out.println("How to Play back button clicked");
                     gameEngine.getMainGUI().showStartScreen();
                 }
                 case "ModuleScreen moduleBackButton" -> {

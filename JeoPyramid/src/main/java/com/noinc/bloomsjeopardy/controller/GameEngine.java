@@ -12,6 +12,7 @@ import com.noinc.bloomsjeopardy.view.GUIGameScreen;
 import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
 import com.noinc.bloomsjeopardy.view.GUIStartScreen;
 import com.noinc.bloomsjeopardy.view.GUIAboutUsScreen;
+import com.noinc.bloomsjeopardy.view.GUIHowToPlayScreen;
 import com.noinc.bloomsjeopardy.view.MainGUI;
 
 public class GameEngine {
@@ -44,6 +45,7 @@ public class GameEngine {
         ((GUIStartScreen) mainGUI.getStartScreen()).getAboutUsButton().addActionListener(playerActionListener);
         ((GUIStartScreen) mainGUI.getStartScreen()).getHowToPlayButton().addActionListener(playerActionListener);
         ((GUIAboutUsScreen) mainGUI.getAboutUsScreen()).getBackButton().addActionListener(playerActionListener);
+        ((GUIHowToPlayScreen) mainGUI.getHowToPlayScreen()).getBackButton().addActionListener(playerActionListener);
         ((GUIModuleScreen) mainGUI.getModuleScreen()).getModuleBackButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getScreen2BackButton().addActionListener(playerActionListener);
@@ -302,6 +304,11 @@ public class GameEngine {
     public void showAboutUs(){
         mainGUI.showAboutUsScreen();
         System.out.println("Showing About Us screen");
+    }
+
+    public void showHowToPlay(){
+        mainGUI.showHowToPlayScreen();
+        System.out.println("Showing How to Play screen");
     }
 
     // Getters and Setters
