@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import com.noinc.bloomsjeopardy.data.GameData;
 
 public class GUIStartScreen extends JPanel implements MouseListener{
-    private JButton playButton, exitButton;
+    private JButton playButton, exitButton, aboutUsButton, howToPlayButton;
     private JPanel parentPanel;
     private GUIBrand brand;
     private GameData gameData;
@@ -43,29 +43,65 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         playButton.setActionCommand("StartScreen playButton");
         exitButton = new JButton("Exit");
         exitButton.setActionCommand("StartScreen exitButton");
+        aboutUsButton = new JButton("About Us");
+        aboutUsButton.setActionCommand("StartScreen aboutUsButton");
+        howToPlayButton = new JButton("How to Play");
+        howToPlayButton.setActionCommand("StartScreen howToPlayButton");
 
         brand.buttonHighlight(playButton);
         brand.buttonTransparent(exitButton);
+        brand.buttonTransparent(aboutUsButton);
+        brand.buttonTransparent(howToPlayButton);
 
         playButton.addMouseListener(this);
         exitButton.addMouseListener(this);
+        aboutUsButton.addMouseListener(this);
+        howToPlayButton.addMouseListener(this);
 
         startScreenPanel.setLayout(new GridBagLayout());
         GridBagConstraints startScreenGBC = new GridBagConstraints();
-        startScreenGBC.gridx = 0;
+        
+        // Add title in the center
+        startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 0;
+        startScreenGBC.anchor = GridBagConstraints.CENTER;
+        startScreenGBC.ipadx = 0;
         startScreenGBC.ipady = 100;
-        startScreenGBC.insets = new Insets(0, 0, 30, 0);
+        startScreenGBC.insets = new Insets(0, 0, 15, 0);
         startScreenPanel.add(titleLabel, startScreenGBC);
-        startScreenGBC.gridx = 0;
+        
+        // Add play button
+        startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 1;
         startScreenGBC.ipadx = 150;
         startScreenGBC.ipady = 30;
+        startScreenGBC.insets = new Insets(0, 0, 10, 0);
         startScreenPanel.add(playButton, startScreenGBC);
-        startScreenGBC.gridx = 0;
+        
+        // Add profile button between Play and Exit
+        startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 2;
+        startScreenGBC.anchor = GridBagConstraints.CENTER;
         startScreenGBC.ipadx = 150;
         startScreenGBC.ipady = 30;
+        startScreenGBC.insets = new Insets(0, 0, 10, 0);
+        startScreenPanel.add(aboutUsButton, startScreenGBC);
+        
+        // Add how to play button between About Us and Exit
+        startScreenGBC.gridx = 1;
+        startScreenGBC.gridy = 3;
+        startScreenGBC.anchor = GridBagConstraints.CENTER;
+        startScreenGBC.ipadx = 150;
+        startScreenGBC.ipady = 30;
+        startScreenGBC.insets = new Insets(0, 0, 10, 0);
+        startScreenPanel.add(howToPlayButton, startScreenGBC);
+        
+        // Add exit button
+        startScreenGBC.gridx = 1;
+        startScreenGBC.gridy = 4;
+        startScreenGBC.ipadx = 150;
+        startScreenGBC.ipady = 30;
+        startScreenGBC.insets = new Insets(0, 0, 0, 0);
         startScreenPanel.add(exitButton, startScreenGBC);
 
         this.add(startScreenPanel, BorderLayout.CENTER);
@@ -77,6 +113,12 @@ public class GUIStartScreen extends JPanel implements MouseListener{
     public JButton getExitButton(){
         return exitButton;
     }
+    public JButton getAboutUsButton(){
+        return aboutUsButton;
+    }
+    public JButton getHowToPlayButton(){
+        return howToPlayButton;
+    }
 
     // Hover Cosmetics
     @Override
@@ -85,9 +127,23 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         if (src == exitButton) {
             brand.buttonHighlight(exitButton);
             brand.buttonTransparent(playButton);
+            brand.buttonTransparent(aboutUsButton);
+            brand.buttonTransparent(howToPlayButton);
         } else if (src == playButton) {
             brand.buttonHighlight(playButton);
             brand.buttonTransparent(exitButton);
+            brand.buttonTransparent(aboutUsButton);
+            brand.buttonTransparent(howToPlayButton);
+        } else if (src == aboutUsButton) {
+            brand.buttonHighlight(aboutUsButton);
+            brand.buttonTransparent(playButton);
+            brand.buttonTransparent(exitButton);
+            brand.buttonTransparent(howToPlayButton);
+        } else if (src == howToPlayButton) {
+            brand.buttonHighlight(howToPlayButton);
+            brand.buttonTransparent(playButton);
+            brand.buttonTransparent(exitButton);
+            brand.buttonTransparent(aboutUsButton);
         }
     }
 

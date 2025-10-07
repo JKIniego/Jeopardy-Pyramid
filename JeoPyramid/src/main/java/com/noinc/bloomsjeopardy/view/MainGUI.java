@@ -15,6 +15,7 @@ public class MainGUI {
     private GUIModuleScreen GUIModuleScreen;
     private GUIGameScreen GUIGameScreen;
     private GUIEndScreen GUIEndScreen;
+    private GUIAboutUsScreen GUIAboutUsScreen;
     private GUIBrand brand;
     private GameData gameData;
 
@@ -30,6 +31,7 @@ public class MainGUI {
         GUIModuleScreen = new GUIModuleScreen(gameData, mainPanel, brand);
         GUIGameScreen = new GUIGameScreen(gameData, mainPanel, brand);
         GUIEndScreen = new GUIEndScreen(gameData, mainPanel, brand);
+        GUIAboutUsScreen = new GUIAboutUsScreen(gameData, mainPanel, brand);
     }
 
     private void initializeFrame(){
@@ -50,6 +52,7 @@ public class MainGUI {
         mainPanel.add(GUIModuleScreen, "ModuleScreen");
         mainPanel.add(GUIGameScreen, "GameScreen");
         mainPanel.add(GUIEndScreen, "EndScreen");
+        mainPanel.add(GUIAboutUsScreen, "AboutUsScreen");
         
         mainFrame.add(mainPanel);
         mainFrame.setVisible(true);   
@@ -77,6 +80,11 @@ public class MainGUI {
         cl.show(mainPanel, "EndScreen");
     }
 
+    public void showAboutUsScreen(){
+        CardLayout cl = (CardLayout) mainPanel.getLayout();
+        cl.show(mainPanel, "AboutUsScreen");
+    }
+
     public JPanel getStartScreen(){
         return GUIStartScreen;
     }
@@ -88,6 +96,9 @@ public class MainGUI {
     }
     public JPanel getEndScreen(){
         return GUIEndScreen;
+    }
+    public JPanel getAboutUsScreen(){
+        return GUIAboutUsScreen;
     }
 
     public JFrame getMainFrame(){

@@ -32,6 +32,18 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                     System.out.println("Exit button clicked");
                     gameEngine.terminateGame();
                 }
+                case "StartScreen howToPlayButton" -> {
+                    System.out.println("How to Play button clicked");
+                    //gameEngine.showHowToPlay();
+                }
+                case "StartScreen aboutUsButton" -> {
+                    System.out.println("About Us button clicked");
+                    gameEngine.showAboutUs();
+                }
+                case "AboutUs backButton" -> {
+                    System.out.println("About Us back button clicked");
+                    gameEngine.getMainGUI().showStartScreen();
+                }
                 case "ModuleScreen moduleBackButton" -> {
                     System.out.println("Back button clicked");
                     gameEngine.getMainGUI().showStartScreen();
