@@ -73,7 +73,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         // Add play button
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 1;
-        startScreenGBC.ipadx = 150;
+        startScreenGBC.ipadx = 240;
         startScreenGBC.ipady = 30;
         startScreenGBC.insets = new Insets(0, 0, 10, 0);
         startScreenPanel.add(playButton, startScreenGBC);
@@ -82,7 +82,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 2;
         startScreenGBC.anchor = GridBagConstraints.CENTER;
-        startScreenGBC.ipadx = 150;
+        startScreenGBC.ipadx = 130;
         startScreenGBC.ipady = 30;
         startScreenGBC.insets = new Insets(0, 0, 10, 0);
         startScreenPanel.add(aboutUsButton, startScreenGBC);
@@ -91,7 +91,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 3;
         startScreenGBC.anchor = GridBagConstraints.CENTER;
-        startScreenGBC.ipadx = 150;
+        startScreenGBC.ipadx = 50;
         startScreenGBC.ipady = 30;
         startScreenGBC.insets = new Insets(0, 0, 10, 0);
         startScreenPanel.add(howToPlayButton, startScreenGBC);
@@ -99,7 +99,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         // Add exit button
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 4;
-        startScreenGBC.ipadx = 150;
+        startScreenGBC.ipadx = 240;
         startScreenGBC.ipady = 30;
         startScreenGBC.insets = new Insets(0, 0, 0, 0);
         startScreenPanel.add(exitButton, startScreenGBC);

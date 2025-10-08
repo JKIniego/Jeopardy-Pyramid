@@ -3,7 +3,6 @@ package com.noinc.bloomsjeopardy.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -84,7 +83,8 @@ public class GUIHowToPlayScreen extends JPanel implements MouseListener {
         // Center align the text
         StyledDocument doc = howToPlayTextPane.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
-        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
+        StyleConstants.setLineSpacing(center, 1.5f);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
         
         String howToPlayText = "How to Play JeoPyramid\n\n" +

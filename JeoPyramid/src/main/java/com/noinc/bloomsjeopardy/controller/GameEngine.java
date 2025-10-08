@@ -7,12 +7,12 @@ import javax.swing.JButton;
 import com.noinc.bloomsjeopardy.data.GameData;
 import com.noinc.bloomsjeopardy.model.GameState;
 import com.noinc.bloomsjeopardy.model.Question;
+import com.noinc.bloomsjeopardy.view.GUIAboutUsScreen;
 import com.noinc.bloomsjeopardy.view.GUIEndScreen;
 import com.noinc.bloomsjeopardy.view.GUIGameScreen;
+import com.noinc.bloomsjeopardy.view.GUIHowToPlayScreen;
 import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
 import com.noinc.bloomsjeopardy.view.GUIStartScreen;
-import com.noinc.bloomsjeopardy.view.GUIAboutUsScreen;
-import com.noinc.bloomsjeopardy.view.GUIHowToPlayScreen;
 import com.noinc.bloomsjeopardy.view.MainGUI;
 
 public class GameEngine {
@@ -67,6 +67,7 @@ public class GameEngine {
     }
 
     public void updateButtonListeners() {
+        // For Pyramid Buttons Only
         GUIGameScreen gameScreen = (GUIGameScreen) mainGUI.getGameScreen();
         JButton[][] itemButtonsArray = gameScreen.getItemButtonsArray();
         int levelUnlocked = gameData.getPlayerUnlockedLevels();
@@ -82,6 +83,36 @@ public class GameEngine {
                 if (row <= levelUnlocked) {
                     btn.addActionListener(playerActionListener);
                 }
+            }
+        }
+    }
+
+    public void enableAllButtonListeners() {
+        // For Pyramid Buttons Only
+        GUIGameScreen gameScreen = (GUIGameScreen) mainGUI.getGameScreen();
+        JButton[][] itemButtonsArray = gameScreen.getItemButtonsArray();
+
+        for (int row = 0; row < itemButtonsArray.length; row++) {
+            for (int col = 0; col < itemButtonsArray[row].length; col++) {
+                JButton btn = itemButtonsArray[row][col];
+                // Remove any old listeners to avoid duplicates
+                for (var al : btn.getActionListeners()) {
+                    if (al instanceof PlayerActionListener) {
+                        btn.removeActionListener(al);
+                    }
+                }
+                // Add back the listener
+                btn.addActionListener(playerActionListener);
+                btn.setEnabled(true);
+            }
+        }
+    }
+
+    public void disableButtonListener(JButton button) {
+        // For Pyramid Buttons Only
+        for (var listener : button.getActionListeners()) {
+            if (listener instanceof PlayerActionListener) {
+                button.removeActionListener(listener);
             }
         }
     }
@@ -176,6 +207,18 @@ public class GameEngine {
         } else {
             System.err.println("Cannot submit answer: no current question or answer already submitted");
         }
+<<<<<<< Updated upstream
+=======
+
+        int row = gameState.getSelectedRow();
+        int col = gameState.getSelectedCol();
+        gameData.markQuestionAnswered(row, col);
+        
+        if (gameData.areAllQuestionsAnswered(row)) {
+            unlockNextLevel();
+            incrementHealth();
+        }
+>>>>>>> Stashed changes
     }
     
     private void handleCorrectAnswer() {
@@ -248,8 +291,8 @@ public class GameEngine {
         ((GUIGameScreen) mainGUI.getGameScreen()).showMenuDialog();
     }
 
-    public void showConfirmationDialog(int choice){
-        if (((GUIGameScreen) mainGUI.getGameScreen()).showConfirmationDialog("Is that your final answer?")){
+    public void showAnswerConfirmationDialog(int choice){
+        if (mainGUI.showConfirmationDialog("Is that your final answer?")){
             submitAnswer(choice);
         }
     }
@@ -258,6 +301,7 @@ public class GameEngine {
         updateButtonListeners();
         gameState.setCurrentState(GameState.State.PYRAMID_SCREEN);
         mainGUI.showGameScreen();
+        ((GUIGameScreen) mainGUI.getGameScreen()).animatePyramidBuild();
         showPyramidScreen();
         System.out.println("Module: " + gameData.getModuleSelected());
         System.out.println("Game started!");
@@ -271,8 +315,11 @@ public class GameEngine {
     }
 
     public void terminateGame(){
-        System.out.println("Game terminated");
-        System.exit(0);
+        if (mainGUI.showConfirmationDialog("Are You Sure?")){
+            System.out.println("Game terminated");
+            System.exit(0);
+        }
+        
     }
 
     public void restartGame(){

@@ -1,6 +1,7 @@
 package com.noinc.bloomsjeopardy.view;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -61,18 +64,25 @@ public class GUIModuleScreen extends JPanel implements MouseListener{
         moduleBackPanel.setOpaque(false);
         moduleBackPanel.add(moduleBackButton, BorderLayout.WEST);
 
+        JPanel moduleLabelPanel = new JPanel();
+        moduleLabelPanel.setLayout(new BoxLayout(moduleLabelPanel, BoxLayout.Y_AXIS));
+        moduleLabelPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        moduleLabelPanel.setOpaque(false);
+        JLabel neuralBrainLabel = new JLabel();
+        neuralBrainLabel.setIcon(new ImageIcon(brand.neuralBrainIMG));
         JLabel moduleContainerLabel = new JLabel("Select Module");
         moduleContainerLabel.setFont(brand.CustomFontSmall);
         moduleContainerLabel.setForeground(brand.white);
+        neuralBrainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        moduleContainerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        moduleLabelPanel.add(neuralBrainLabel);
+        moduleLabelPanel.add(moduleContainerLabel);
 
         JPanel moduleButtonsPanel = new JPanel();
         moduleButtonsPanel.setOpaque(false);
         moduleButtonsPanel.setLayout(new GridBagLayout());
-
         GridBagConstraints moduleButtonsPanelGBC = new GridBagConstraints();
         moduleButtonsPanelGBC.gridy = 0;
-        moduleButtonsPanelGBC.ipady = 40;
-        moduleButtonsPanel.add(moduleContainerLabel, moduleButtonsPanelGBC);
         moduleButtonsPanelGBC.ipady = 0;
         
         GridBagConstraints containerPanelGBC = new GridBagConstraints();
@@ -82,8 +92,12 @@ public class GUIModuleScreen extends JPanel implements MouseListener{
         containerPanelGBC.gridy = 0;
         containerPanelGBC.ipady = 10;
         containerPanel.add(moduleBackPanel, containerPanelGBC);
-        containerPanelGBC.weighty = 0.8;
+        containerPanelGBC.weighty = 0.1;
         containerPanelGBC.gridy = 1;
+        containerPanelGBC.ipady = 0;
+        containerPanel.add(moduleLabelPanel, containerPanelGBC);
+        containerPanelGBC.weighty = 0.8;
+        containerPanelGBC.gridy = 2;
         containerPanelGBC.ipady = 0;
         containerPanel.add(moduleButtonsPanel, containerPanelGBC);
 
@@ -92,6 +106,8 @@ public class GUIModuleScreen extends JPanel implements MouseListener{
         for(int i = 0; i<gameData.getModules().length; i++){
             JButton button = new JButton();
             button.setText(gameData.getModules()[i]);
+            button.setPreferredSize(new Dimension(190,50));
+            button.setBorder(BorderFactory.createLineBorder(brand.blue, 4));
             button.setForeground(brand.white);
             button.setBackground(brand.black);
             button.setFont(brand.CustomFontSmall);
