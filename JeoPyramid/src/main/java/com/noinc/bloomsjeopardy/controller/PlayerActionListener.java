@@ -92,12 +92,8 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                     System.out.println("Pyramid button clicked: " + btn.getText() + " at [" + row + "][" + col + "]");
                     
                     gameEngine.selectQuestion(row, col);
-<<<<<<< Updated upstream
-                    gameEngine.unlockNextLevel(); // temporary for testing purposes
-=======
                     gameEngine.disableButtonListener(btn);
                     // gameEngine.unlockNextLevel(); // temporary for testing purposes
->>>>>>> Stashed changes
                 }
                 default -> {
                     System.out.println("Player Action Listener reached default");

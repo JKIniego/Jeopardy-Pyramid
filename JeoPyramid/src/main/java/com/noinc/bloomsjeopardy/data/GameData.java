@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
 import com.noinc.bloomsjeopardy.model.Question;
 
 public class GameData {
@@ -19,6 +20,7 @@ public class GameData {
     private int moduleSelected;
     private String[][] itemLabels;
     private String[] qnaStrings;
+    private boolean[][] questionsAnswered;
     
     private final int[] levelScores = {100, 200, 300, 400, 500, 600};
     private final String[] categories = {"Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"};
@@ -36,6 +38,7 @@ public class GameData {
         this.questions = new ArrayList<>();
         
         initializeItemLabels();
+        initializeQuestionsAnswered();
         loadQuestionsFromCSV();
     }
     
@@ -48,6 +51,13 @@ public class GameData {
             {"$500", "$500"},
             {"$600"}
         };
+    }
+
+    private void initializeQuestionsAnswered() {
+        questionsAnswered = new boolean[itemLabels.length][];
+        for (int i = 0; i < itemLabels.length; i++) {
+            questionsAnswered[i] = new boolean[itemLabels[i].length];
+        }
     }
     
     private void loadQuestionsFromCSV() {
@@ -188,6 +198,21 @@ public class GameData {
         }
         return qnaStrings; 
     }
+
+    public void markQuestionAnswered(int row, int col) {
+        if (questionsAnswered == null) initializeQuestionsAnswered();
+        if (row >= 0 && row < questionsAnswered.length && col >= 0 && col < questionsAnswered[row].length) {
+            questionsAnswered[row][col] = true;
+        }
+    }
+
+    public boolean areAllQuestionsAnswered(int level) {
+        if (questionsAnswered == null) return false;
+        for (boolean b : questionsAnswered[level]) {
+            if (!b) return false;
+        }
+        return true;
+    }
     
     public void setQnaStrings(String[] qnaStrings) { this.qnaStrings = qnaStrings; }
     
@@ -198,4 +223,6 @@ public class GameData {
     public String[] getCategories() { return categories; }
     
     public List<Question> getQuestions() { return questions; }
+
+    public boolean[][] getQuestionsAnswered() { return questionsAnswered; }
 }

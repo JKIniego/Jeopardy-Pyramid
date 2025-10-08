@@ -207,8 +207,6 @@ public class GameEngine {
         } else {
             System.err.println("Cannot submit answer: no current question or answer already submitted");
         }
-<<<<<<< Updated upstream
-=======
 
         int row = gameState.getSelectedRow();
         int col = gameState.getSelectedCol();
@@ -218,7 +216,6 @@ public class GameEngine {
             unlockNextLevel();
             incrementHealth();
         }
->>>>>>> Stashed changes
     }
     
     private void handleCorrectAnswer() {
