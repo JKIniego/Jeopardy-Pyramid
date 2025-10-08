@@ -1,93 +1,227 @@
 package com.noinc.bloomsjeopardy.data;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import com.noinc.bloomsjeopardy.model.Question;
 
 public class GameData {
-    private int[] levelScores;
-    private int playerHealth, maxPlayerHealth, playerScore, playerUnlockedLevels;
+    private int playerScore;
+    private int playerHealth;
+    private int maxPlayerHealth = 3;
+    private int playerUnlockedLevels;
+    private int moduleSelected;
     private String[][] itemLabels;
     private String[] qnaStrings;
-
-    public GameData(){        
-        initializeConstantValues();     // All immutable vales
-        initializeDefaultValues();      // Program modifies these values
-    }
-
-    public void initializeConstantValues(){
-        maxPlayerHealth = 3;        // max value: 3
-        levelScores = new int[]{100, 300, 500, 1000, 1500, 5000};
-
-        itemLabels = new String[levelScores.length][];
-        for (int i = 0; i < levelScores.length; i++) {
-            // bottom row first: i=0 → 6 copies of $100
-            // top row last: i=5 → 1 copy of $5000
-            itemLabels[i] = new String[levelScores.length - i];
-            Arrays.fill(itemLabels[i], "$" + levelScores[i]);
-        }
-    }
-
-    public void initializeDefaultValues(){
-        // all data here can be changed as the game progress
-        playerHealth = 3;           // default value: 3
-        playerScore = 0;            // max value: 15100
-        playerUnlockedLevels = 0;   // base-0 max value: 5 
-
-        //Temporary
-
-
+    private boolean[][] questionsAnswered;
+    
+    private final int[] levelScores = {100, 200, 300, 400, 500, 600};
+    private final String[] categories = {"Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"};
+    private final String[] modules = {"Module 1", "Module 2", "Module 3"};
+    
+    private List<Question> questions;
+    private Random random;
+    
+    public GameData() {
+        this.playerScore = 0;
+        this.playerHealth = maxPlayerHealth;
+        this.playerUnlockedLevels = 0;
+        this.moduleSelected = 0; // Default to Module 1 instead of -1
+        this.random = new Random();
+        this.questions = new ArrayList<>();
         
-        String catergoryString = "Evaluation $5000";
-        String statementString = " The General Problem Solver of Newell and Simon was inefficient alongside its foolhardy claims that AI can copy entire workings of the human brain.";
-        String choiceAString = " Did early AI systems fail to incorporate human-like emotions into their designs?";
-        String choiceBString = " Why was the abandonment of the General Problem Solver primarily due to a lack of interest from funding agencies? ";
-        String choiceCString = " How were early AI approaches deemed impractical and their claims about human intelligence replication exaggerated?";
-        String choiceDString = " How did the lack of advanced programming languages hinder the General Problem Solver's development?  >> How did the lack of advanced programming languages hinder the General Problem Solver's development?How did the lack of advanced programming languages hinder the General Problem Solver's development?How did the lack of advanced programming languages hinder the General Problem Solver's development?How did the lack of advanced programming languages hinder the General Problem Solver's development?How did the lack of advanced programming languages hinder the General Problem Solver's development?How did the lack of advanced programming languages hinder the General Problem Solver's development?How did the lack of advanced programming languages hinder the General Problem Solver's development?How did the lack of advanced programming languages hinder the General Problem Solver's development?";
-
-        qnaStrings = new String[]{
-            catergoryString, statementString, choiceAString, choiceBString, choiceCString, choiceDString
+        initializeItemLabels();
+        initializeQuestionsAnswered();
+        loadQuestionsFromCSV();
+    }
+    
+    private void initializeItemLabels() {
+        itemLabels = new String[][] {
+            {"$100", "$100", "$100", "$100", "$100", "$100"},
+            {"$200", "$200", "$200", "$200", "$200"},
+            {"$300", "$300", "$300", "$300"},
+            {"$400", "$400", "$400"},
+            {"$500", "$500"},
+            {"$600"}
         };
     }
 
-    public int getPlayerScore(){
-        return playerScore;
+    private void initializeQuestionsAnswered() {
+        questionsAnswered = new boolean[itemLabels.length][];
+        for (int i = 0; i < itemLabels.length; i++) {
+            questionsAnswered[i] = new boolean[itemLabels[i].length];
+        }
     }
-    public void setPlayerScore(int newScore){
-        playerScore = newScore;
-    } 
     
-    public int getPlayerHealth(){
-        return playerHealth;
-    }
-    public void setPlayerHealth(int newPlayerHealth){
-        playerHealth = newPlayerHealth;
-    }
+    private void loadQuestionsFromCSV() {
+        String modulePath = "/data/" + modules[moduleSelected] + "/";
+        String[] csvFiles = {
+            modulePath + "Knowledge.csv",
+            modulePath + "Comprehension.csv", 
+            modulePath + "Application.csv",
+            modulePath + "Analysis.csv",
+            modulePath + "Synthesis.csv",
+            modulePath + "Evaluation.csv"
+        };
 
-    public int getMaxPlayerHealth(){
-        return maxPlayerHealth;
+        questions.clear();
+        
+        for (int i = 0; i < csvFiles.length; i++) {
+            String category = categories[i];
+            try (InputStream is = getClass().getResourceAsStream(csvFiles[i]);
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split("#");
+                    if (parts.length >= 5) {
+                        String statement = parts[0].trim();
+                        String correctAnswer = parts[1].trim();
+                        String[] wrongAnswers = new String[]{
+                            parts[2].trim(),
+                            parts[3].trim(),
+                            parts[4].trim()
+                        };
+                        
+                        List<String> allAnswers = new ArrayList<>();
+                        allAnswers.add(correctAnswer);
+                        allAnswers.addAll(Arrays.asList(wrongAnswers));
+                        Collections.shuffle(allAnswers);
+                        
+                        int correctIndex = allAnswers.indexOf(correctAnswer);
+                        
+                        Question question = new Question(
+                            correctAnswer,
+                            statement,
+                            allAnswers.toArray(new String[0]),
+                            correctIndex,
+                            category,
+                            levelScores[i]
+                        );
+                        questions.add(question);
+                    }
+                }
+            } catch (IOException | NullPointerException e) {
+                System.err.println("Error loading CSV file: " + csvFiles[i]);
+                System.err.println("Trying fallback to Module 1...");
+
+                if (moduleSelected != 0) {
+                    moduleSelected = 0;
+                    loadQuestionsFromCSV();
+                    return;
+                }
+                e.printStackTrace();
+            }
+        }
+        
+        Collections.shuffle(questions);
+        System.out.println("Loaded " + questions.size() + " questions from " + modules[moduleSelected]);
     }
-
-    public int getPlayerUnlockedLevels(){
-        return playerUnlockedLevels;
-    }
-    public void setPlayerUnlockedLevels(int newUnlockedLevels){
-        playerUnlockedLevels = newUnlockedLevels;
-    }
-
-    public String[][] getItemLabels(){
-        return itemLabels;
-    }
-
-    public String[] getQnaStrings(){
-        return qnaStrings;
-    }
-
-    public int[] getLevelScores(){
-        return levelScores;
-    }
-
-
-
     
+    // Reload questions when module changes
+    public void reloadQuestionsForModule(int newModule) {
+        if (newModule >= 0 && newModule < modules.length) {
+            this.moduleSelected = newModule;
+            loadQuestionsFromCSV();
+        }
+    }
+    
+    public Question getRandomQuestion(String category, int level) {
+        List<Question> filteredQuestions = new ArrayList<>();
+        
+        for (Question q : questions) {
+            if (q.getCategory().equals(category) && 
+                q.getValue() == levelScores[level]) {
+                filteredQuestions.add(q);
+            }
+        }
+        
+        if (!filteredQuestions.isEmpty()) {
+            return filteredQuestions.get(random.nextInt(filteredQuestions.size()));
+        }
+        
+        for (Question q : questions) {
+            if (q.getValue() == levelScores[level]) {
+                filteredQuestions.add(q);
+            }
+        }
+        
+        return filteredQuestions.isEmpty() ? 
+            new Question("Default Answer", "Default Statement",
+                        new String[]{"Choice A", "Choice B", "Choice C", "Choice D"},
+                        0,
+                        "General", 100)
+            : filteredQuestions.get(random.nextInt(filteredQuestions.size()));
+    }
+    
+    public Question getQuestionForPosition(int row, int col) {
+        String category = categories[row];
+        return getRandomQuestion(category, row);
+    }
+    
+    // Getters and Setters
+    public int getPlayerScore() { return playerScore; }
+    public void setPlayerScore(int playerScore) { this.playerScore = playerScore; }
+    
+    public int getPlayerHealth() { return playerHealth; }
+    public void setPlayerHealth(int playerHealth) { this.playerHealth = playerHealth; }
+    
+    public int getMaxPlayerHealth() { return maxPlayerHealth; }
+    
+    public int getModuleSelected() { return moduleSelected; }
+    public void setModuleSelected(int moduleSelected) { 
+        this.moduleSelected = moduleSelected;
+        reloadQuestionsForModule(moduleSelected);
+    }
+    
+    public int getPlayerUnlockedLevels() { return playerUnlockedLevels; }
+    public void setPlayerUnlockedLevels(int playerUnlockedLevels) { 
+        this.playerUnlockedLevels = playerUnlockedLevels; 
+    }
+    
+    public String[][] getItemLabels() { return itemLabels; }
+    
+    public String[] getQnaStrings() { 
+        if (qnaStrings == null) {
+            qnaStrings = new String[]{
+                "Category: General",
+                "Statement: Select a question from the pyramid",
+                "A) Choice A", "B) Choice B", "C) Choice C", "D) Choice D"
+            };
+        }
+        return qnaStrings; 
+    }
 
+    public void markQuestionAnswered(int row, int col) {
+        if (questionsAnswered == null) initializeQuestionsAnswered();
+        if (row >= 0 && row < questionsAnswered.length && col >= 0 && col < questionsAnswered[row].length) {
+            questionsAnswered[row][col] = true;
+        }
+    }
 
+    public boolean areAllQuestionsAnswered(int level) {
+        if (questionsAnswered == null) return false;
+        for (boolean b : questionsAnswered[level]) {
+            if (!b) return false;
+        }
+        return true;
+    }
+    
+    public void setQnaStrings(String[] qnaStrings) { this.qnaStrings = qnaStrings; }
+    
+    public int[] getLevelScores() { return levelScores; }
+    
+    public String[] getModules() { return modules; }
+    
+    public String[] getCategories() { return categories; }
+    
+    public List<Question> getQuestions() { return questions; }
+
+    public boolean[][] getQuestionsAnswered() { return questionsAnswered; }
 }

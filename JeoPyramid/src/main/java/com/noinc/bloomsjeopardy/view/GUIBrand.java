@@ -15,7 +15,7 @@ import javax.swing.JButton;
 public class GUIBrand {
     BufferedImage gameIconIMG, backgroundIMG, titleIMG, titleInGameIMG, brickIMG, heartFullIMG, heartEmptyIMG, menuIMG;
     Color blue, lightBlue, darkBlue, red, green, white, black, gray; 
-    Font CustomFontLarge, CustomFontMedium, CustomFontSmall, CustomFontExtraSmall;
+    Font CustomFontLarge, CustomFontFinalScore, CustomFontMedium, CustomFontSmall, CustomFontExtraSmall;
 
     public GUIBrand(){
         blue = new Color(56, 182, 255);
@@ -33,10 +33,11 @@ public class GUIBrand {
                 throw new IOException("Font file not found in resources!");
             }
             Font CustomFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
-            CustomFontLarge = CustomFont.deriveFont(Font.PLAIN, 35);
+            CustomFontLarge = CustomFont.deriveFont(Font.PLAIN, 65);
             CustomFontMedium = CustomFont.deriveFont(Font.PLAIN, 27);
             CustomFontSmall = CustomFont.deriveFont(Font.PLAIN, 16);
             CustomFontExtraSmall = CustomFont.deriveFont(Font.PLAIN, 12);
+            CustomFontFinalScore = CustomFont.deriveFont(Font.PLAIN, 40);
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
@@ -49,16 +50,17 @@ public class GUIBrand {
             heartFullIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/heart-full.png"));
             heartEmptyIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/heart-empty.png"));
             menuIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/menu.png"));
-            
+            gameIconIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/game-icon.png"));
 
             
             //backgroundIMG = resizeImage(backgroundIMG, 200, 50);
-            titleIMG = resizeImage(titleIMG, 750, 150);
+            titleIMG = resizeImage(titleIMG, 800, 150);
             titleInGameIMG = resizeImage(titleInGameIMG, 450, 80);
             brickIMG = resizeImage(brickIMG, 170, 53);
             heartFullIMG = resizeImage(heartFullIMG, 20, 20);
             heartEmptyIMG = resizeImage(heartEmptyIMG, 20, 20);
             menuIMG = resizeImage(menuIMG, 20, 20);
+            gameIconIMG = resizeImage(gameIconIMG, 250, 200);
 
         } catch (IOException ex) {
             ex.printStackTrace();

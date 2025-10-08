@@ -1,2 +1,0 @@
-This should contain the data handling, reading the knowledge bank.
-e.g. CSVDataManager.java (logic to read and parse the CSV files)
