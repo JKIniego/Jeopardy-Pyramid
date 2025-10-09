@@ -43,6 +43,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     private GameData gameData;
     private boolean isAnswerLocked;
     private LayoutManager originalParentLayout;
+    private int lastUnlockedLevel = 0;
 
     private JTextPane categoryLabel, statementLabel, choiceALabel, choiceBLabel, choiceCLabel, choiceDLabel;
     
@@ -238,76 +239,6 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         screen1.add(pyramidPanel, screen1GBC);
     }
 
-    public void animatePyramidBuild() {
-        // Store original colors and hide all buttons
-        Color[][] originalColors = new Color[itemButtonsArray.length][];
-        
-        for (int row = 0; row < itemButtonsArray.length; row++) {
-            originalColors[row] = new Color[itemButtonsArray[row].length];
-            for (int col = 0; col < itemButtonsArray[row].length; col++) {
-                originalColors[row][col] = itemButtonsArray[row][col].getForeground();
-                itemButtonsArray[row][col].setForeground(Color.WHITE);
-                itemButtonsArray[row][col].setVisible(false);
-            }
-        }
-        
-        // Animate building from top to bottom (lower levels first)
-        new Thread(() -> {
-            try {
-                for (int row = 0; row < itemButtonsArray.length; row++) {
-                    final int currentRow = row;
-                
-                    for (int col = 0; col < itemButtonsArray[currentRow].length; col++) {
-                        final int currentCol = col;
-                        
-                        javax.swing.SwingUtilities.invokeLater(() -> {
-                            itemButtonsArray[currentRow][currentCol].setVisible(true);
-                            screen1.revalidate();
-                            screen1.repaint();
-                        });
-                        Thread.sleep(50);
-                    }
-                    Thread.sleep(50);
-                }
-
-                //Flicker
-                for(int i=0; i<3;i++){
-                    Thread.sleep(100);
-                    javax.swing.SwingUtilities.invokeLater(() -> {
-                        for (int row = 0; row < itemButtonsArray.length; row++) {
-                            for (int col = 0; col < itemButtonsArray[row].length; col++) {
-                                itemButtonsArray[row][col].setForeground(brand.gray);
-                            }
-                        }
-                        screen1.repaint();
-                    });
-                    Thread.sleep(200);
-                    javax.swing.SwingUtilities.invokeLater(() -> {
-                        for (int row = 0; row < itemButtonsArray.length; row++) {
-                            for (int col = 0; col < itemButtonsArray[row].length; col++) {
-                                itemButtonsArray[row][col].setForeground(brand.white);
-                            }
-                        }
-                        screen1.repaint();
-                    });
-                }
-                Thread.sleep(100);
-                javax.swing.SwingUtilities.invokeLater(() -> {
-                    for (int row = 0; row < itemButtonsArray.length; row++) {
-                        for (int col = 0; col < itemButtonsArray[row].length; col++) {
-                            itemButtonsArray[row][col].setForeground(originalColors[row][col]);
-                        }
-                    }
-                    screen1.repaint();
-                });
-
-                
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }).start();
-    }
-
     private void initializeScreen2(){
         screen2 = new JPanel();
         screen2.setLayout(new GridBagLayout());
@@ -460,6 +391,154 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         return pane;
     }
 
+    public void animatePyramidBuild() {
+        // Store original colors and hide all buttons
+        Color[][] originalColors = new Color[itemButtonsArray.length][];
+        
+        for (int row = 0; row < itemButtonsArray.length; row++) {
+            originalColors[row] = new Color[itemButtonsArray[row].length];
+            for (int col = 0; col < itemButtonsArray[row].length; col++) {
+                originalColors[row][col] = itemButtonsArray[row][col].getForeground();
+                itemButtonsArray[row][col].setForeground(Color.WHITE);
+                itemButtonsArray[row][col].setVisible(false);
+            }
+        }
+        
+        // Animate building from top to bottom (lower levels first)
+        new Thread(() -> {
+            try {
+                for (int row = 0; row < itemButtonsArray.length; row++) {
+                    final int currentRow = row;
+                
+                    for (int col = 0; col < itemButtonsArray[currentRow].length; col++) {
+                        final int currentCol = col;
+                        
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+                            itemButtonsArray[currentRow][currentCol].setVisible(true);
+                            screen1.revalidate();
+                            screen1.repaint();
+                        });
+                        Thread.sleep(50);
+                    }
+                    Thread.sleep(50);
+                }
+
+                //Flicker
+                for(int i=0; i<3;i++){
+                    Thread.sleep(100);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        for (int row = 0; row < itemButtonsArray.length; row++) {
+                            for (int col = 0; col < itemButtonsArray[row].length; col++) {
+                                itemButtonsArray[row][col].setForeground(brand.gray);
+                            }
+                        }
+                        screen1.repaint();
+                    });
+                    Thread.sleep(200);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        for (int row = 0; row < itemButtonsArray.length; row++) {
+                            for (int col = 0; col < itemButtonsArray[row].length; col++) {
+                                itemButtonsArray[row][col].setForeground(brand.white);
+                            }
+                        }
+                        screen1.repaint();
+                    });
+                }
+                Thread.sleep(100);
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    for (int row = 0; row < itemButtonsArray.length; row++) {
+                        for (int col = 0; col < itemButtonsArray[row].length; col++) {
+                            itemButtonsArray[row][col].setForeground(originalColors[row][col]);
+                        }
+                    }
+                    screen1.repaint();
+                });
+
+                
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void animateHUDScore() {
+        // Animate Score Added
+        new Thread(() -> {
+            try {
+                for(int i=0; i<3; i++){
+                    Thread.sleep(200);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        scoreLabel.setForeground(brand.blue);
+                    });
+                    Thread.sleep(200);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        scoreLabel.setForeground(brand.white);
+                    });
+                    parentPanel.repaint();
+                }
+                
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void animateHUDHearts(boolean gainedHeart) {
+        new Thread(() -> {
+            try {
+                int heartIndex = gainedHeart ? gameData.getPlayerHealth() - 1 : gameData.getPlayerHealth();
+
+                for (int i = 0; i < 3; i++) {
+                    Thread.sleep(200);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        JLabel heart = (JLabel) livesPanel.getComponent(heartIndex * 2 + 1); // skip spacer
+                        heart.setIcon(new ImageIcon(brand.heartEmptyIMG));
+                        livesPanel.repaint();
+                    });
+                    Thread.sleep(200);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        JLabel heart = (JLabel) livesPanel.getComponent(heartIndex * 2 + 1);
+                        heart.setIcon(new ImageIcon(brand.heartFullIMG));
+                        livesPanel.repaint();
+                    });
+                }
+
+                // refresh to correct icons at the end
+                javax.swing.SwingUtilities.invokeLater(this::updateHUD);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+
+    public void animateUnlockedLevel() {
+        int levelUnlocked = gameData.getPlayerUnlockedLevels();
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < 3; i++) { // flicker 3 times
+                    Thread.sleep(100);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        for (JButton btn : itemButtonsArray[levelUnlocked]) {
+                            btn.setForeground(brand.gray);
+                        }
+                        screen1.repaint();
+                    });
+                    Thread.sleep(150);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        for (JButton btn : itemButtonsArray[levelUnlocked]) {
+                            btn.setForeground(brand.white);
+                        }
+                        screen1.repaint();
+                    });
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
     public void updateQNAScreen() {
         String[] qnaStrings = gameData.getQnaStrings();
         
@@ -593,9 +672,15 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         if (choiceDParent instanceof JPanel) ((JPanel) choiceDParent).setBackground(brand.black);
     }
 
-    public void showScreen1(){
+    public void showScreen1() {
         CardLayout cl = (CardLayout) screensContainer.getLayout();
         cl.show(screensContainer, "screen1");
+        System.out.println("Showing pyramid screen");
+        int currentUnlocked = gameData.getPlayerUnlockedLevels();
+        if (currentUnlocked > lastUnlockedLevel) {
+            animateUnlockedLevel();
+            lastUnlockedLevel = currentUnlocked;
+        }
     }
 
     public void showScreen2(){

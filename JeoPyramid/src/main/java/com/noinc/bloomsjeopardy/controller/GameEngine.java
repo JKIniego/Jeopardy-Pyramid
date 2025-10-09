@@ -110,11 +110,7 @@ public class GameEngine {
 
     public void disableButtonListener(JButton button) {
         // For Pyramid Buttons Only
-        for (var listener : button.getActionListeners()) {
-            if (listener instanceof PlayerActionListener) {
-                button.removeActionListener(listener);
-            }
-        }
+        button.removeActionListener(playerActionListener);
     }
 
     public void selectQuestion(int row, int col) {
@@ -255,6 +251,7 @@ public class GameEngine {
         if(currentHealth < maxPlayerHealth){
             gameData.setPlayerHealth(currentHealth + 1);
             ((GUIGameScreen) mainGUI.getGameScreen()).updateHUD();
+            ((GUIGameScreen) mainGUI.getGameScreen()).animateHUDHearts(true);
             System.out.println("Health increased to: " + gameData.getPlayerHealth());
         }
     }
@@ -264,6 +261,7 @@ public class GameEngine {
         if(currentHealth > 0){
             gameData.setPlayerHealth(currentHealth - 1);
             ((GUIGameScreen) mainGUI.getGameScreen()).updateHUD();
+            ((GUIGameScreen) mainGUI.getGameScreen()).animateHUDHearts(false);
             System.out.println("Health decreased to: " + gameData.getPlayerHealth());
             if (gameData.getPlayerHealth() == 0){
                 endMainGame();
@@ -276,6 +274,7 @@ public class GameEngine {
         int addedScore = gameData.getLevelScores()[row];
         gameData.setPlayerScore(currentPlayerScore + addedScore);
         ((GUIGameScreen) mainGUI.getGameScreen()).updateHUD();
+        ((GUIGameScreen) mainGUI.getGameScreen()).animateHUDScore();
         System.out.println("Score updated: $" + currentPlayerScore + " + $" + addedScore + " = $" + gameData.getPlayerScore());
     }
 
