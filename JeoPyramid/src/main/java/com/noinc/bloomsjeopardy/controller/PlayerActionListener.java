@@ -91,6 +91,12 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                     int col = (int) btn.getClientProperty("col");
                     System.out.println("Pyramid button clicked: " + btn.getText() + " at [" + row + "][" + col + "]");
                     
+                    // check if this question has already been answered
+                    if (gameEngine.getGameData().isQuestionAnswered(row, col)) {
+                        System.out.println("Question already answered at [" + row + "][" + col + "] - ignoring click");
+                        return; // don't proceed if already answered
+                    }
+                    
                     gameEngine.selectQuestion(row, col);
                     //btn.removeActionListener(this);
                     gameEngine.disableButtonListener(btn);

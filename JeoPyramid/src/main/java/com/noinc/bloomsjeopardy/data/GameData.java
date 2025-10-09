@@ -206,6 +206,14 @@ public class GameData {
         }
     }
 
+    public boolean isQuestionAnswered(int row, int col) {
+        if (questionsAnswered == null) return false;
+        if (row >= 0 && row < questionsAnswered.length && col >= 0 && col < questionsAnswered[row].length) {
+            return questionsAnswered[row][col];
+        }
+        return false;
+    }
+
     public boolean areAllQuestionsAnswered(int level) {
         if (questionsAnswered == null) return false;
         for (boolean b : questionsAnswered[level]) {
