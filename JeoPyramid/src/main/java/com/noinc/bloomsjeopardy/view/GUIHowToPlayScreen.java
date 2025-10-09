@@ -61,7 +61,7 @@ public class GUIHowToPlayScreen extends JPanel implements MouseListener {
         titlePanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         
         JLabel titleLabel = new JLabel("How to Play");
-        titleLabel.setFont(brand.CustomFontLarge);
+        titleLabel.setFont(brand.CustomFontMedium);
         titleLabel.setForeground(brand.blue);
         titlePanel.add(titleLabel);
 
@@ -168,8 +168,11 @@ public class GUIHowToPlayScreen extends JPanel implements MouseListener {
         
         backButton = new JButton("Back");
         backButton.setActionCommand("HowToPlay backButton");
+        backButton.setPreferredSize(new Dimension(200, 30));
+        backButton.setBorderPainted(false);
+        backButton.setForeground(brand.white);
+        backButton.setBackground(brand.black);
         backButton.setFont(brand.CustomFontMedium);
-        brand.buttonTransparent(backButton);
         backButton.addMouseListener(this);
         buttonPanel.add(backButton);
 
@@ -211,7 +214,7 @@ public class GUIHowToPlayScreen extends JPanel implements MouseListener {
     public void mouseEntered(MouseEvent e) {
         Object src = e.getSource();
         if (src == backButton) {
-            brand.buttonHighlight(backButton);
+            backButton.setBackground(brand.blue);
         }
     }
 
@@ -219,7 +222,7 @@ public class GUIHowToPlayScreen extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
         Object src = e.getSource();
         if (src == backButton) {
-            brand.buttonTransparent(backButton);
+            backButton.setBackground(brand.black);
         }
     }
 

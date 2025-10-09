@@ -418,9 +418,9 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                             screen1.revalidate();
                             screen1.repaint();
                         });
-                        Thread.sleep(50);
+                        Thread.sleep(70);
                     }
-                    Thread.sleep(50);
+                    Thread.sleep(70);
                 }
 
                 //Flicker
@@ -468,7 +468,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                 for(int i=0; i<3; i++){
                     Thread.sleep(200);
                     javax.swing.SwingUtilities.invokeLater(() -> {
-                        scoreLabel.setForeground(brand.blue);
+                        scoreLabel.setForeground(brand.green);
                     });
                     Thread.sleep(200);
                     javax.swing.SwingUtilities.invokeLater(() -> {
@@ -827,6 +827,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     public JButton getMenuExitButton(){return menuExitButton;}
     public JButton getScreen2BackButton(){return screen2BackButton;}
     public JButton[][] getItemButtonsArray(){return itemButtonsArray;}
+    public Boolean getIsAnswerLocked(){return isAnswerLocked;}
     public JPanel getChoiceA(){return choiceA;}
     public JPanel getChoiceB(){return choiceB;}
     public JPanel getChoiceC(){return choiceC;}

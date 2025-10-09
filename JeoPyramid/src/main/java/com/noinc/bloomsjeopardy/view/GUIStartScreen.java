@@ -38,7 +38,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
             }
         };
         
-        JLabel titleLabel = new JLabel(new ImageIcon(brand.titleIMG));
+        JLabel titleLabel = new JLabel(brand.titleGIF);
         playButton = new JButton("Play");
         playButton.setActionCommand("StartScreen playButton");
         exitButton = new JButton("Exit");

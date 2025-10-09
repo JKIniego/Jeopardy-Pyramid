@@ -39,9 +39,7 @@ public class GUIEndScreen extends JPanel implements MouseListener {
             }
         };
         
-        JLabel titleLabel = new JLabel("GAME OVER!");
-        titleLabel.setForeground(brand.blue);
-        titleLabel.setFont(brand.CustomFontLarge);
+        JLabel titleLabel = new JLabel(brand.gameOverGIF);
 
         finalScore = new JLabel("$" + gameData.getPlayerScore());
         finalScore.setForeground(brand.white);

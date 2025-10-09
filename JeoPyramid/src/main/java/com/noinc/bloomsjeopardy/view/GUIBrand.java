@@ -10,12 +10,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class GUIBrand {
     BufferedImage gameIconIMG, backgroundIMG, titleIMG, titleInGameIMG, brickIMG, heartFullIMG, heartEmptyIMG, menuIMG, neuralBrainIMG;
     Color blue, lightBlue, darkBlue, red, green, white, black, gray; 
     Font CustomFontLarge, CustomFontFinalScore, CustomFontMedium, CustomFontSmall, CustomFontSmaller, CustomFontExtraSmall;
+    ImageIcon titleGIF, titleInGameGIF, gameOverGIF;
 
     public GUIBrand(){
         blue = new Color(56, 182, 255);
@@ -53,8 +55,7 @@ public class GUIBrand {
             menuIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/menu.png"));
             gameIconIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/game-icon.png"));
             neuralBrainIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/neural-brain.png"));
-            
-            //backgroundIMG = resizeImage(backgroundIMG, 200, 50);
+
             titleIMG = resizeImage(titleIMG, 800, 150);
             titleInGameIMG = resizeImage(titleInGameIMG, 450, 80);
             brickIMG = resizeImage(brickIMG, 170, 53);
@@ -64,10 +65,23 @@ public class GUIBrand {
             gameIconIMG = resizeImage(gameIconIMG, 250, 200);
             neuralBrainIMG = resizeImage(neuralBrainIMG, 200, 200);
 
+            titleGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation.gif"));
+            titleInGameGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation2.gif"));
+            gameOverGIF = new ImageIcon(getClass().getResource("/Assets/Images/game-over.gif"));
+            
+            titleGIF = resizeGIF(titleGIF, 800, 150);
+            titleInGameGIF = resizeGIF(titleInGameGIF, 500, 100);
+            gameOverGIF = resizeGIF(gameOverGIF, 900, 150);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         
+    }
+
+    public ImageIcon resizeGIF(ImageIcon icon, int width, int height) {
+        Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        return new ImageIcon(scaled);
     }
 
     public BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {

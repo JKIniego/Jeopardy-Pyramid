@@ -73,7 +73,10 @@ public class MainGUI implements MouseListener{
         mainFrame.setVisible(true);   
     }
 
-    public boolean showConfirmationDialog(String message) {
+    public boolean showConfirmationDialog(String message, int type) {
+        if (type == 1 && ((GUIGameScreen) getGameScreen()).getIsAnswerLocked()) {
+            return false;
+        }
         final boolean[] result = {false};
         JDialog dialog = new JDialog(mainFrame, "Confirm", Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setUndecorated(true);

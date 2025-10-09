@@ -288,7 +288,7 @@ public class GameEngine {
     }
 
     public void showAnswerConfirmationDialog(int choice){
-        if (mainGUI.showConfirmationDialog("Is that your final answer?")){
+        if (mainGUI.showConfirmationDialog("Is that your final answer?", 1)){
             submitAnswer(choice);
         }
     }
@@ -311,7 +311,7 @@ public class GameEngine {
     }
 
     public void terminateGame(){
-        if (mainGUI.showConfirmationDialog("Are You Sure?")){
+        if (mainGUI.showConfirmationDialog("Are You Sure?", 0)){
             System.out.println("Game terminated");
             System.exit(0);
         }
