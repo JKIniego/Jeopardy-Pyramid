@@ -14,6 +14,7 @@ import com.noinc.bloomsjeopardy.view.GUIHowToPlayScreen;
 import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
 import com.noinc.bloomsjeopardy.view.GUIStartScreen;
 import com.noinc.bloomsjeopardy.view.MainGUI;
+import com.noinc.bloomsjeopardy.utils.SoundManager;
 
 public class GameEngine {
     private MainGUI mainGUI;
@@ -27,6 +28,8 @@ public class GameEngine {
         mainGUI = new MainGUI(gameData);
         playerActionListener = new PlayerActionListener(this);
         addActionListeners();
+        // Play intro sound on application open
+        SoundManager.getInstance().playIntro();
         
         // Debug: Print how many questions were loaded
         System.out.println("Total questions loaded: " + gameData.getQuestions().size());
@@ -196,8 +199,12 @@ public class GameEngine {
             ((GUIGameScreen) mainGUI.getGameScreen()).showAnswerFeedback(correct, choiceIndex, gameState.getCurrentQuestion().getCorrectIndex());
             
             if (correct) {
+                // Play one of the correct sounds randomly
+                SoundManager.getInstance().playCorrectRandom();
                 handleCorrectAnswer();
             } else {
+                // Play one of the wrong sounds randomly
+                SoundManager.getInstance().playWrongRandom();
                 handleIncorrectAnswer();
             }
         } else {
@@ -299,6 +306,9 @@ public class GameEngine {
         mainGUI.showGameScreen();
         ((GUIGameScreen) mainGUI.getGameScreen()).animatePyramidBuild();
         showPyramidScreen();
+        // Play level intro based on unlocked level (1-based index for file names)
+        int level = gameData.getPlayerUnlockedLevels() + 1;
+        SoundManager.getInstance().playLevelIntro(level);
         System.out.println("Module: " + gameData.getModuleSelected());
         System.out.println("Game started!");
     }
@@ -313,7 +323,9 @@ public class GameEngine {
     public void terminateGame(){
         if (mainGUI.showConfirmationDialog("Are You Sure?", 0)){
             System.out.println("Game terminated");
-            System.exit(0);
+                // Play exit press sound and wait for it to finish before exiting
+                SoundManager.getInstance().playExitPressAndWait();
+                System.exit(0);
         }
         
     }
