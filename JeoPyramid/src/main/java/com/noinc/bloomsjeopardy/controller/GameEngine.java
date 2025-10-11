@@ -28,6 +28,8 @@ public class GameEngine {
         mainGUI = new MainGUI(gameData);
         playerActionListener = new PlayerActionListener(this);
         addActionListeners();
+        // Play background music when open
+        SoundManager.getInstance().playBackgroundMusic();
         // Play intro sound on application open
         SoundManager.getInstance().playIntro();
         
