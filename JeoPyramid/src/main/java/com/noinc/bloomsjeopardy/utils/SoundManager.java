@@ -234,14 +234,24 @@ public class SoundManager {
 			clip.stop();
 		}
 		clip.setFramePosition(0);
+		final Object lock = new Object();
+		clip.addLineListener(event -> {
+			if (event.getType() == LineEvent.Type.STOP) {
+				synchronized (lock) {
+					lock.notify();
+				}
+			}
+		});
 		clip.start();
 		// Block until playback finishes
-		try {
-			long timeout = 5000; // max 5 seconds
-			long start = System.currentTimeMillis();
-			while (clip.isRunning() && (System.currentTimeMillis() - start < timeout)) {
-				Thread.sleep(20);
-			}
-		} catch (InterruptedException ignored) {}
+		synchronized (lock) {
+			try {
+				long timeout = 5000; // max 5 seconds
+				long start = System.currentTimeMillis();
+				while (clip.isRunning() && (System.currentTimeMillis() - start < timeout)) {
+					lock.wait(20);
+				}
+			} catch (InterruptedException ignored) {}
+		}
 	}
 }
