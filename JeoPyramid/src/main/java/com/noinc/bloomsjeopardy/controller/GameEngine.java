@@ -250,7 +250,8 @@ public class GameEngine {
             gameData.setPlayerUnlockedLevels(currentLevel + 1);
             updateButtonListeners();
             ((GUIGameScreen) mainGUI.getGameScreen()).updateLevels();
-            System.out.println("Level unlocked! Current level: " + gameData.getPlayerUnlockedLevels());
+            System.out.println("Level unlocked! Current level: " + gameData.getPlayerUnlockedLevels() + 1);
+            SoundManager.getInstance().playLevelIntro(gameData.getPlayerUnlockedLevels() + 1);
         }
     }
 
