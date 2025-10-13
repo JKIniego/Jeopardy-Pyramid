@@ -12,6 +12,7 @@ import com.noinc.bloomsjeopardy.view.GUIEndScreen;
 import com.noinc.bloomsjeopardy.view.GUIGameScreen;
 import com.noinc.bloomsjeopardy.view.GUIHowToPlayScreen;
 import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
+import com.noinc.bloomsjeopardy.view.GUISettingsScreen;
 import com.noinc.bloomsjeopardy.view.GUIStartScreen;
 import com.noinc.bloomsjeopardy.view.MainGUI;
 import com.noinc.bloomsjeopardy.utils.SoundManager;
@@ -49,8 +50,10 @@ public class GameEngine {
         ((GUIStartScreen) mainGUI.getStartScreen()).getExitButton().addActionListener(playerActionListener);
         ((GUIStartScreen) mainGUI.getStartScreen()).getAboutUsButton().addActionListener(playerActionListener);
         ((GUIStartScreen) mainGUI.getStartScreen()).getHowToPlayButton().addActionListener(playerActionListener);
+        ((GUIStartScreen) mainGUI.getStartScreen()).getSettingsButton().addActionListener(playerActionListener);
         ((GUIAboutUsScreen) mainGUI.getAboutUsScreen()).getBackButton().addActionListener(playerActionListener);
         ((GUIHowToPlayScreen) mainGUI.getHowToPlayScreen()).getBackButton().addActionListener(playerActionListener);
+        ((GUISettingsScreen) mainGUI.getSettingsScreen()).getBackButton().addActionListener(playerActionListener);
         ((GUIModuleScreen) mainGUI.getModuleScreen()).getModuleBackButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getScreen2BackButton().addActionListener(playerActionListener);
@@ -367,6 +370,11 @@ public class GameEngine {
     public void showHowToPlay(){
         mainGUI.showHowToPlayScreen();
         System.out.println("Showing How to Play screen");
+    }
+
+    public void showSettings(){
+        mainGUI.showSettingsScreen();
+        System.out.println("Showing Settings screen");
     }
 
     // Getters and Setters

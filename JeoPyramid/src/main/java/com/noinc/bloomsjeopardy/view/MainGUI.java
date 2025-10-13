@@ -28,6 +28,7 @@ public class MainGUI implements MouseListener{
     private GUIEndScreen GUIEndScreen;
     private GUIAboutUsScreen GUIAboutUsScreen;
     private GUIHowToPlayScreen GUIHowToPlayScreen;
+    private GUISettingsScreen GUISettingsScreen;
     private GUIBrand brand;
     private GameData gameData;
     private JButton yesButton, noButton;
@@ -46,6 +47,7 @@ public class MainGUI implements MouseListener{
         GUIEndScreen = new GUIEndScreen(gameData, mainPanel, brand);
         GUIAboutUsScreen = new GUIAboutUsScreen(gameData, mainPanel, brand);
         GUIHowToPlayScreen = new GUIHowToPlayScreen(gameData, mainPanel, brand);
+        GUISettingsScreen = new GUISettingsScreen(gameData, mainPanel, brand);
     }
 
     private void initializeFrame(){
@@ -68,6 +70,7 @@ public class MainGUI implements MouseListener{
         mainPanel.add(GUIEndScreen, "EndScreen");
         mainPanel.add(GUIAboutUsScreen, "AboutUsScreen");
         mainPanel.add(GUIHowToPlayScreen, "HowToPlayScreen");
+        mainPanel.add(GUISettingsScreen, "SettingsScreen");
         
         mainFrame.add(mainPanel);
         mainFrame.setVisible(true);   
@@ -175,6 +178,11 @@ public class MainGUI implements MouseListener{
         cl.show(mainPanel, "HowToPlayScreen");
     }
 
+    public void showSettingsScreen(){
+        CardLayout cl = (CardLayout) mainPanel.getLayout();
+        cl.show(mainPanel, "SettingsScreen");
+    }
+
     public JPanel getStartScreen(){
         return GUIStartScreen;
     }
@@ -192,6 +200,9 @@ public class MainGUI implements MouseListener{
     }
     public JPanel getHowToPlayScreen(){
         return GUIHowToPlayScreen;
+    }
+    public JPanel getSettingsScreen(){
+        return GUISettingsScreen;
     }
 
     public JFrame getMainFrame(){
