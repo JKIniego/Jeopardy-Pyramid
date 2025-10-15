@@ -33,7 +33,7 @@ public class GameData {
         this.playerScore = 0;
         this.playerHealth = maxPlayerHealth;
         this.playerUnlockedLevels = 0;
-        this.moduleSelected = 0; // Default to Module 1 instead of -1
+        this.moduleSelected = 0;
         this.random = new Random();
         this.questions = new ArrayList<>();
         
@@ -90,18 +90,13 @@ public class GameData {
                             parts[4].trim()
                         };
                         
-                        List<String> allAnswers = new ArrayList<>();
-                        allAnswers.add(correctAnswer);
-                        allAnswers.addAll(Arrays.asList(wrongAnswers));
-                        Collections.shuffle(allAnswers);
-                        
-                        int correctIndex = allAnswers.indexOf(correctAnswer);
-                        
+                        // Store the question WITHOUT shuffling
+                        // We'll shuffle when retrieving the question
                         Question question = new Question(
                             correctAnswer,
                             statement,
-                            allAnswers.toArray(new String[0]),
-                            correctIndex,
+                            wrongAnswers,  // Store only wrong answers
+                            0,  // Placeholder - will be calculated on retrieval
                             category,
                             levelScores[i]
                         );
@@ -133,6 +128,32 @@ public class GameData {
         }
     }
     
+    // Helper method to randomize answer positions
+    private Question randomizeAnswers(Question originalQuestion) {
+        // Create a list with correct answer and wrong answers
+        List<String> allAnswers = new ArrayList<>();
+        allAnswers.add(originalQuestion.getAnswer());
+        allAnswers.addAll(Arrays.asList(originalQuestion.getChoices()));
+        
+        // Shuffle the answers
+        Collections.shuffle(allAnswers, random);
+        
+        // Find the new index of the correct answer
+        int newCorrectIndex = allAnswers.indexOf(originalQuestion.getAnswer());
+        
+        // Create a new question with shuffled answers
+        Question randomizedQuestion = new Question(
+            originalQuestion.getAnswer(),
+            originalQuestion.getQuestionText(),
+            allAnswers.toArray(new String[0]),
+            newCorrectIndex,
+            originalQuestion.getCategory(),
+            originalQuestion.getValue()
+        );
+        
+        return randomizedQuestion;
+    }
+    
     public Question getRandomQuestion(String category, int level) {
         List<Question> filteredQuestions = new ArrayList<>();
         
@@ -143,22 +164,25 @@ public class GameData {
             }
         }
         
-        if (!filteredQuestions.isEmpty()) {
-            return filteredQuestions.get(random.nextInt(filteredQuestions.size()));
-        }
-        
-        for (Question q : questions) {
-            if (q.getValue() == levelScores[level]) {
-                filteredQuestions.add(q);
+        if (filteredQuestions.isEmpty()) {
+            for (Question q : questions) {
+                if (q.getValue() == levelScores[level]) {
+                    filteredQuestions.add(q);
+                }
             }
         }
         
-        return filteredQuestions.isEmpty() ? 
-            new Question("Default Answer", "Default Statement",
-                        new String[]{"Choice A", "Choice B", "Choice C", "Choice D"},
-                        0,
-                        "General", 100)
-            : filteredQuestions.get(random.nextInt(filteredQuestions.size()));
+        if (filteredQuestions.isEmpty()) {
+            // Default question as fallback
+            Question defaultQ = new Question("Default Answer", "Default Statement",
+                        new String[]{"Wrong 1", "Wrong 2", "Wrong 3"},
+                        0, "General", 100);
+            return randomizeAnswers(defaultQ);
+        }
+        
+        // Select a random question and randomize its answers
+        Question selectedQuestion = filteredQuestions.get(random.nextInt(filteredQuestions.size()));
+        return randomizeAnswers(selectedQuestion);
     }
     
     public Question getQuestionForPosition(int row, int col) {
