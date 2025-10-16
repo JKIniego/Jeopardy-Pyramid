@@ -15,11 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import com.noinc.bloomsjeopardy.data.GameData;
 
@@ -65,72 +61,39 @@ public class GUIHowToPlayScreen extends JPanel implements MouseListener {
         titleLabel.setForeground(brand.blue);
         titlePanel.add(titleLabel);
 
-        // Content section
+        // Content section with scrollable image
         JPanel howToPlayContentPanel = new JPanel(new BorderLayout());
         howToPlayContentPanel.setBackground(brand.black);
         howToPlayContentPanel.setBorder(BorderFactory.createMatteBorder(8, 0, 0, 0, brand.blue));
 
-        JTextPane howToPlayTextPane = new JTextPane();
-        howToPlayTextPane.setBackground(brand.black);
-        howToPlayTextPane.setForeground(brand.white);
-        // Change the font size while maintaining the font family
-        // You can modify the number (12f) to any size you want:
-        // 8f = very small, 10f = small, 12f = medium-small, 14f = medium, 16f = large, 18f = extra large
-        howToPlayTextPane.setFont(brand.CustomFontMedium.deriveFont(12f));
-        howToPlayTextPane.setEditable(false);
-        howToPlayTextPane.setMargin(new Insets(20, 20, 20, 20));
-        
-        // Center align the text
-        StyledDocument doc = howToPlayTextPane.getStyledDocument();
-        SimpleAttributeSet center = new SimpleAttributeSet();
-        StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
-        StyleConstants.setLineSpacing(center, 1.5f);
-        doc.setParagraphAttributes(0, doc.getLength(), center, false);
-        
-        String howToPlayText = "How to Play JeoPyramid\n\n" +
-                              "OBJECTIVE:\n" +
-                              "Answer questions correctly to progress through different cognitive levels\n" +
-                              "based on Bloom's Taxonomy and achieve the highest score possible.\n\n" +
-                              "GAME MECHANICS:\n\n" +
-                              "1. MODULE SELECTION\n" +
-                              "   • Choose from available learning modules\n" +
-                              "   • Each module contains questions across 6 cognitive levels\n\n" +
-                              "2. PYRAMID STRUCTURE\n" +
-                              "   • Questions are organized in a pyramid format\n" +
-                              "   • Higher levels require mastery of lower levels\n" +
-                              "   • Progress unlocks more challenging questions\n\n" +
-                              "3. COGNITIVE LEVELS (Bloom's Taxonomy)\n" +
-                              "   • Knowledge: Basic recall of facts\n" +
-                              "   • Comprehension: Understanding concepts\n" +
-                              "   • Application: Using knowledge in new situations\n" +
-                              "   • Analysis: Breaking down complex information\n" +
-                              "   • Synthesis: Creating new ideas from existing knowledge\n" +
-                              "   • Evaluation: Making judgments and assessments\n\n" +
-                              "4. SCORING SYSTEM\n" +
-                              "   • Correct answers earn points\n" +
-                              "   • Higher cognitive levels award more points\n" +
-                              "   • Track your progress and challenge yourself\n\n" +
-                              "5. HEALTH SYSTEM\n" +
-                              "   • You have 3 lives (hearts) per game\n" +
-                              "   • Incorrect answers reduce your health\n" +
-                              "   • Game ends when all lives are lost\n\n" +
-                              "TIPS FOR SUCCESS:\n\n" +
-                              "• Read questions carefully before selecting answers\n" +
-                              "• Start with lower levels to build confidence\n" +
-                              "• Think critically about higher-level questions\n" +
-                              "• Use the menu to pause or restart if needed\n\n" +
-                              "Good luck and enjoy learning!";
-        
-        howToPlayTextPane.setText(howToPlayText);
+        // Create a panel to display the image
+        JPanel imagePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (brand.howToPlayIMG != null) {
+                    g.drawImage(brand.howToPlayIMG, 0, 0, brand.howToPlayIMG.getWidth(), brand.howToPlayIMG.getHeight(), this);
+                }
+            }
+            
+            @Override
+            public Dimension getPreferredSize() {
+                if (brand.howToPlayIMG != null) {
+                    return new Dimension(brand.howToPlayIMG.getWidth(), brand.howToPlayIMG.getHeight());
+                }
+                return super.getPreferredSize();
+            }
+        };
+        imagePanel.setBackground(brand.black);
         
         // Create scroll pane and customize scrollbars
-        JScrollPane scrollPane = new JScrollPane(howToPlayTextPane);
+        JScrollPane scrollPane = new JScrollPane(imagePanel);
         scrollPane.setPreferredSize(new Dimension(900, 400));
         scrollPane.setBackground(brand.black);
         scrollPane.setBorder(BorderFactory.createLineBorder(brand.blue, 2));
         scrollPane.getViewport().setBackground(brand.black);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
         // Customize vertical scrollbar
         scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
@@ -157,7 +120,36 @@ public class GUIHowToPlayScreen extends JPanel implements MouseListener {
             }
         });
         
+        // Customize horizontal scrollbar
+        scrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = brand.blue;
+                this.trackColor = brand.black;
+            }
+            
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                JButton button = super.createDecreaseButton(orientation);
+                button.setBackground(brand.blue);
+                button.setBorder(BorderFactory.createLineBorder(brand.blue));
+                return button;
+            }
+            
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                JButton button = super.createIncreaseButton(orientation);
+                button.setBackground(brand.blue);
+                button.setBorder(BorderFactory.createLineBorder(brand.blue));
+                return button;
+            }
+        });
+        
         scrollPane.getVerticalScrollBar().setBackground(brand.black);
+        scrollPane.getHorizontalScrollBar().setBackground(brand.black);
+
+        scrollPane.getVerticalScrollBar().setUnitIncrement(30);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(30);
         
         howToPlayContentPanel.add(scrollPane, BorderLayout.CENTER);
 

@@ -263,7 +263,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         qnaPanel.setLayout(new GridBagLayout());
         
         JPanel categoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
-        JPanel statementPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
+        JPanel statementPanel = new JPanel(new GridBagLayout());
         JPanel choiceContainerPanel = new JPanel(new GridLayout(2,2));
         JPanel choiceAPanel = new JPanel();
         JPanel choiceBPanel = new JPanel();
@@ -405,7 +405,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     public void animatePyramidBuild() {
         // Store original colors and hide all buttons
         Color[][] originalColors = new Color[itemButtonsArray.length][];
-        
+        menuButton.setEnabled(false);
         for (int row = 0; row < itemButtonsArray.length; row++) {
             originalColors[row] = new Color[itemButtonsArray[row].length];
             for (int col = 0; col < itemButtonsArray[row].length; col++) {
@@ -464,7 +464,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
                     }
                     screen1.repaint();
                 });
-
+                menuButton.setEnabled(true);
                 
             } catch (InterruptedException ex) {
                 ex.printStackTrace();

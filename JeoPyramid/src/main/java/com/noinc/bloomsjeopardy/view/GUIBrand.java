@@ -14,7 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class GUIBrand {
-    BufferedImage gameIconIMG, backgroundIMG, titleIMG, titleInGameIMG, brickIMG, heartFullIMG, heartEmptyIMG, menuIMG, neuralBrainIMG;
+    BufferedImage gameIconIMG, backgroundIMG, titleIMG, titleInGameIMG, howToPlayIMG, brickIMG, heartFullIMG, heartEmptyIMG, menuIMG, neuralBrainIMG;
     Color blue, lightBlue, darkBlue, red, green, white, black, gray; 
     Font CustomFontLarge, CustomFontFinalScore, CustomFontMedium, CustomFontSmall, CustomFontSmaller, CustomFontExtraSmall;
     ImageIcon titleGIF, titleInGameGIF, gameOverGIF;
@@ -55,7 +55,8 @@ public class GUIBrand {
             menuIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/menu.png"));
             gameIconIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/game-icon.png"));
             neuralBrainIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/neural-brain.png"));
-
+            howToPlayIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/how-to-play.png"));
+    
             titleIMG = resizeImage(titleIMG, 800, 150);
             titleInGameIMG = resizeImage(titleInGameIMG, 450, 80);
             brickIMG = resizeImage(brickIMG, 170, 53);
@@ -64,6 +65,7 @@ public class GUIBrand {
             menuIMG = resizeImage(menuIMG, 20, 20);
             gameIconIMG = resizeImage(gameIconIMG, 250, 200);
             neuralBrainIMG = resizeImage(neuralBrainIMG, 200, 200);
+            howToPlayIMG = resizeImage(howToPlayIMG, 900, 3441);
 
             titleGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation.gif"));
             titleInGameGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation2.gif"));
