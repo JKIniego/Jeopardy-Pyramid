@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import com.noinc.bloomsjeopardy.data.GameData;
 import com.noinc.bloomsjeopardy.model.GameState;
 import com.noinc.bloomsjeopardy.model.Question;
+import com.noinc.bloomsjeopardy.utils.SoundManager;
 import com.noinc.bloomsjeopardy.view.GUIAboutUsScreen;
 import com.noinc.bloomsjeopardy.view.GUIEndScreen;
 import com.noinc.bloomsjeopardy.view.GUIGameScreen;
@@ -15,7 +16,6 @@ import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
 import com.noinc.bloomsjeopardy.view.GUISettingsScreen;
 import com.noinc.bloomsjeopardy.view.GUIStartScreen;
 import com.noinc.bloomsjeopardy.view.MainGUI;
-import com.noinc.bloomsjeopardy.utils.SoundManager;
 
 public class GameEngine {
     private MainGUI mainGUI;
@@ -58,6 +58,7 @@ public class GameEngine {
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getScreen2BackButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuResumeButton().addActionListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getMenuSettingsButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuRestartButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuExitButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceA().addMouseListener(playerActionListener);
@@ -249,12 +250,21 @@ public class GameEngine {
     public void unlockNextLevel(){
         int currentLevel = gameData.getPlayerUnlockedLevels();
         int maxLevel = gameData.getLevelScores().length - 1;
+        
         if(currentLevel < maxLevel){
             gameData.setPlayerUnlockedLevels(currentLevel + 1);
             updateButtonListeners();
             ((GUIGameScreen) mainGUI.getGameScreen()).updateLevels();
-            System.out.println("Level unlocked! Current level: " + gameData.getPlayerUnlockedLevels() + 1);
+            System.out.println("Level unlocked! Current level: " + (gameData.getPlayerUnlockedLevels() + 1));
             SoundManager.getInstance().playLevelIntro(gameData.getPlayerUnlockedLevels() + 1);
+        } else {
+            // All levels completed - top of pyramid reached!
+            System.out.println("🎉 All levels completed! Top of pyramid reached!");
+            javax.swing.Timer timer = new javax.swing.Timer(2000, e -> {
+                endMainGame();
+            });
+            timer.setRepeats(false);
+            timer.start();
         }
     }
 
@@ -337,12 +347,18 @@ public class GameEngine {
     }
 
     public void restartGame(){
+        // Reset game data and state
         gameData = new GameData();
         gameState = new GameState();
-        mainGUI.getMainFrame().dispose();
-        mainGUI = new MainGUI(gameData);
+        
+        // Reinitialize GUI without closing window
+        mainGUI.reinitialize(gameData);
+        
+        // Recreate and re-add all action listeners
         playerActionListener = new PlayerActionListener(this);
         addActionListeners();
+        
+        System.out.println("Game restarted");
     }
 
     public void resumeGame(){
@@ -373,6 +389,11 @@ public class GameEngine {
     }
 
     public void showSettings(){
+        if (gameState.getCurrentState() == GameState.State.PYRAMID_SCREEN || 
+            gameState.getCurrentState() == GameState.State.QUESTION_SCREEN) {
+            ((GUIGameScreen) mainGUI.getGameScreen()).hideMenuDialog();
+        }
+        
         mainGUI.showSettingsScreen();
         System.out.println("Showing Settings screen");
     }

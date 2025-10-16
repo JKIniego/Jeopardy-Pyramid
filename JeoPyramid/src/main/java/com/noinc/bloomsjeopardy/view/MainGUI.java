@@ -59,6 +59,29 @@ public class MainGUI implements MouseListener{
         mainFrame.setLocationRelativeTo(null);
     }
 
+    public void reinitialize(GameData newGameData) {
+        this.gameData = newGameData;
+        
+        if (!(mainPanel.getLayout() instanceof CardLayout)) {
+            mainPanel.setLayout(new CardLayout());
+        }
+        
+        mainPanel.removeAll();
+        
+        initializeClasses();
+        
+        mainPanel.add(GUIStartScreen, "StartScreen");
+        mainPanel.add(GUIModuleScreen, "ModuleScreen");
+        mainPanel.add(GUIGameScreen, "GameScreen");
+        mainPanel.add(GUIEndScreen, "EndScreen");
+        mainPanel.add(GUIAboutUsScreen, "AboutUsScreen");
+        mainPanel.add(GUIHowToPlayScreen, "HowToPlayScreen");
+        mainPanel.add(GUISettingsScreen, "SettingsScreen");
+        showStartScreen();
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
     private void initializeMainPanel(){
         mainPanel = new JPanel(new java.awt.CardLayout());
 

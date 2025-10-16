@@ -24,7 +24,7 @@ public class GameData {
     
     private final int[] levelScores = {100, 200, 300, 400, 500, 600};
     private final String[] categories = {"Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"};
-    private final String[] modules = {"Module 1", "Module 2", "Module 3", "Module 4"};
+    private final String[] modules = {"Module 1", "Module 2", "Module 3", "Module 4", "Module 5"};
     
     private List<Question> questions;
     private Random random;

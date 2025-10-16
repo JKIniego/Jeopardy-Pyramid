@@ -8,6 +8,9 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.noinc.bloomsjeopardy.model.GameState;
+import com.noinc.bloomsjeopardy.view.GUIGameScreen;
+
 public class PlayerActionListener implements ActionListener, MouseListener{
     private GameEngine gameEngine;
 
@@ -54,7 +57,13 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "Settings backButton" -> {
                     System.out.println("Settings back button clicked");
-                    gameEngine.getMainGUI().showStartScreen();
+                    if (gameEngine.getGameState().getCurrentState() == GameState.State.PYRAMID_SCREEN || 
+                        gameEngine.getGameState().getCurrentState() == GameState.State.QUESTION_SCREEN) {
+                        gameEngine.getMainGUI().showGameScreen();
+                        ((GUIGameScreen) gameEngine.getMainGUI().getGameScreen()).showMenuDialog();
+                    } else {
+                        gameEngine.getMainGUI().showStartScreen();
+                    }
                 }
                 case "ModuleScreen moduleBackButton" -> {
                     System.out.println("Back button clicked");
@@ -85,6 +94,10 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 case "GameScreen menuResumeButton" -> {
                     System.out.println("Resume button clicked");
                     gameEngine.resumeGame();
+                }
+                case "GameScreen menuSettingsButton" -> {
+                    System.out.println("Settings button clicked");
+                    gameEngine.showSettings();
                 }
                 case "GameScreen menuRestartButton" -> {
                     System.out.println("Restart button clicked");

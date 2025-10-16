@@ -36,7 +36,7 @@ import com.noinc.bloomsjeopardy.data.GameData;
 
 public class GUIGameScreen extends JPanel implements MouseListener  {
     private JPanel parentPanel, mainGamePanel, hudPanel, menuPanel, overlayMenu, livesPanel, screen1, screen2, screensContainer, choiceA, choiceB, choiceC, choiceD;
-    private JButton menuButton, menuResumeButton, menuRestartButton, menuExitButton, screen2BackButton, yesButton, noButton;
+    private JButton menuButton, menuResumeButton, menuRestartButton, menuExitButton, screen2BackButton, menuSettingsButton, yesButton, noButton;
     private JLabel scoreLabel;
     private JButton[][] itemButtonsArray;
     private GUIBrand brand;
@@ -96,32 +96,41 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         menuPanel.setPreferredSize(new Dimension(300, 300));
 
         menuResumeButton = new JButton("Resume");
+        menuSettingsButton = new JButton("Settings");
         menuRestartButton = new JButton("Restart");
         menuExitButton = new JButton("Exit");
 
         menuResumeButton.setBackground(brand.black);
+        menuSettingsButton.setBackground(brand.black);
         menuRestartButton.setBackground(brand.black);
         menuExitButton.setBackground(brand.black);
         menuResumeButton.setForeground(brand.white);
+        menuSettingsButton.setForeground(brand.white);
         menuRestartButton.setForeground(brand.white);
         menuExitButton.setForeground(brand.white);
         menuResumeButton.setFont(brand.CustomFontSmall);
+        menuSettingsButton.setFont(brand.CustomFontSmall);
         menuRestartButton.setFont(brand.CustomFontSmall);
         menuExitButton.setFont(brand.CustomFontSmall);
         menuResumeButton.setBorderPainted(false);
+        menuSettingsButton.setBorderPainted(false);
         menuRestartButton.setBorderPainted(false);
         menuExitButton.setBorderPainted(false);
         menuResumeButton.setFocusable(false);
+        menuSettingsButton.setFocusable(false);
         menuRestartButton.setFocusable(false);
         menuExitButton.setFocusable(false);
         menuResumeButton.addMouseListener(this);
+        menuSettingsButton.addMouseListener(this);
         menuRestartButton.addMouseListener(this);
         menuExitButton.addMouseListener(this);
         menuResumeButton.setPreferredSize(new Dimension(200, 30));
+        menuSettingsButton.setPreferredSize(new Dimension(200, 30));
         menuRestartButton.setPreferredSize(new Dimension(200, 30));
         menuExitButton.setPreferredSize(new Dimension(200, 30));
 
         menuResumeButton.setActionCommand("GameScreen menuResumeButton");
+        menuSettingsButton.setActionCommand("GameScreen menuSettingsButton");
         menuRestartButton.setActionCommand("GameScreen menuRestartButton");
         menuExitButton.setActionCommand("GameScreen menuExitButton");
 
@@ -131,9 +140,11 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         menuPanelGBC.ipadx = 0;
         menuPanelGBC.ipady = 5;
         menuPanel.add(menuResumeButton, menuPanelGBC);
-        menuPanelGBC.gridy = 1;
+        menuPanelGBC.gridy++;
+        menuPanel.add(menuSettingsButton, menuPanelGBC);
+        menuPanelGBC.gridy++;
         menuPanel.add(menuRestartButton, menuPanelGBC);
-        menuPanelGBC.gridy = 2;
+        menuPanelGBC.gridy++;
         menuPanel.add(menuExitButton, menuPanelGBC);
     }
 
@@ -692,7 +703,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     }
 
     public void repaintMenuButtons(JButton button){
-        JButton buttons[] = {menuResumeButton, menuRestartButton, menuExitButton};
+        JButton buttons[] = {menuResumeButton, menuSettingsButton, menuRestartButton, menuExitButton};
         for (int i = 0; i<buttons.length; i++){
             buttons[i].setBackground(brand.black);
         }
@@ -823,6 +834,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
     // Getters and Setters
     public JButton getMenuButton(){return menuButton;}
     public JButton getMenuResumeButton(){return menuResumeButton;}
+    public JButton getMenuSettingsButton(){return menuSettingsButton;}
     public JButton getMenuRestartButton(){return menuRestartButton;}
     public JButton getMenuExitButton(){return menuExitButton;}
     public JButton getScreen2BackButton(){return screen2BackButton;}

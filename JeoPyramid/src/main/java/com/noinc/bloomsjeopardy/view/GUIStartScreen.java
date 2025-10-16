@@ -8,7 +8,6 @@ import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -77,7 +76,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         // Add play button
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 1;
-        startScreenGBC.ipadx = 120;
+        startScreenGBC.ipadx = 240;
         startScreenGBC.ipady = 20;
         startScreenGBC.insets = new Insets(0, 0, 8, 0);
         startScreenPanel.add(playButton, startScreenGBC);
@@ -86,7 +85,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 2;
         startScreenGBC.anchor = GridBagConstraints.CENTER;
-        startScreenGBC.ipadx = 100;
+        startScreenGBC.ipadx = 130;
         startScreenGBC.ipady = 20;
         startScreenGBC.insets = new Insets(0, 0, 8, 0);
         startScreenPanel.add(settingsButton, startScreenGBC);
@@ -95,7 +94,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 3;
         startScreenGBC.anchor = GridBagConstraints.CENTER;
-        startScreenGBC.ipadx = 80;
+        startScreenGBC.ipadx = 130;
         startScreenGBC.ipady = 20;
         startScreenGBC.insets = new Insets(0, 0, 8, 0);
         startScreenPanel.add(aboutUsButton, startScreenGBC);
@@ -104,7 +103,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 4;
         startScreenGBC.anchor = GridBagConstraints.CENTER;
-        startScreenGBC.ipadx = 60;
+        startScreenGBC.ipadx = 50;
         startScreenGBC.ipady = 20;
         startScreenGBC.insets = new Insets(0, 0, 8, 0);
         startScreenPanel.add(howToPlayButton, startScreenGBC);
@@ -112,7 +111,7 @@ public class GUIStartScreen extends JPanel implements MouseListener{
         // Add exit button
         startScreenGBC.gridx = 1;
         startScreenGBC.gridy = 5;
-        startScreenGBC.ipadx = 120;
+        startScreenGBC.ipadx = 240;
         startScreenGBC.ipady = 20;
         startScreenGBC.insets = new Insets(0, 0, 0, 0);
         startScreenPanel.add(exitButton, startScreenGBC);
