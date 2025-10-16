@@ -264,12 +264,13 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         
         JPanel categoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
         JPanel statementPanel = new JPanel(new GridBagLayout());
-        JPanel choiceContainerPanel = new JPanel(new GridLayout(2,2));
+        JPanel choiceContainerPanel = new JPanel(new GridLayout(2,2, 10, 10));
         JPanel choiceAPanel = new JPanel();
         JPanel choiceBPanel = new JPanel();
         JPanel choiceCPanel = new JPanel();
         JPanel choiceDPanel = new JPanel();
 
+        choiceContainerPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         choiceContainerPanel.setOpaque(false);
         choiceContainerPanel.add(choiceAPanel);
         choiceContainerPanel.add(choiceBPanel);
@@ -289,11 +290,11 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         choiceDPanel.setLayout(new OverlayLayout(choiceDPanel));
 
         categoryPanel.setBorder(BorderFactory.createEmptyBorder(10,0, 10, 50));
-        statementPanel.setBorder(BorderFactory.createMatteBorder(8,0, 8, 0, brand.blue));
-        choiceAPanel.setBorder(BorderFactory.createMatteBorder(0,0, 4, 4, brand.blue));
-        choiceBPanel.setBorder(BorderFactory.createMatteBorder(0,4, 4, 0, brand.blue));
-        choiceCPanel.setBorder(BorderFactory.createMatteBorder(4,0, 0, 4, brand.blue));
-        choiceDPanel.setBorder(BorderFactory.createMatteBorder(4,4, 0, 0, brand.blue));
+        statementPanel.setBorder(BorderFactory.createMatteBorder(8,0, 0, 0, brand.blue));
+        choiceAPanel.setBorder(BorderFactory.createMatteBorder(5,5, 5, 5, brand.blue));
+        choiceBPanel.setBorder(BorderFactory.createMatteBorder(5,5, 5, 5, brand.blue));
+        choiceCPanel.setBorder(BorderFactory.createMatteBorder(5,5, 5, 5, brand.blue));
+        choiceDPanel.setBorder(BorderFactory.createMatteBorder(5,5, 5, 5, brand.blue));
 
         choiceAPanel.setName("choice1");
         choiceBPanel.setName("choice2");
@@ -311,7 +312,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         bufferLabel.setFont(brand.CustomFontExtraSmall);
         categoryPanel.setLayout(new BorderLayout());
 
-        categoryLabel = makeStyledLabel(0, "", brand.CustomFontExtraSmall, brand.white, brand.black, 1f, StyleConstants.ALIGN_CENTER);
+        categoryLabel = makeStyledLabel(0, "", brand.CustomFontSmall, brand.white, brand.black, 1f, StyleConstants.ALIGN_CENTER);
         statementLabel = makeStyledLabel(0, "", brand.CustomFontExtraSmall, brand.white, brand.black, 1.5f, StyleConstants.ALIGN_CENTER);
         choiceALabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 1.5f, StyleConstants.ALIGN_CENTER);
         choiceBLabel = makeStyledLabel(1, "", brand.CustomFontExtraSmall, brand.white, brand.black, 1.5f, StyleConstants.ALIGN_CENTER);
@@ -367,7 +368,7 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         GridBagConstraints qnaPanelGBC = new GridBagConstraints();
         qnaPanelGBC.fill = GridBagConstraints.BOTH;
         qnaPanelGBC.weightx = 1;
-        qnaPanelGBC.weighty = 0.1;
+        qnaPanelGBC.weighty = 0.001;
         qnaPanelGBC.gridy = 0;
         qnaPanel.add(categoryPanel, qnaPanelGBC);
         qnaPanelGBC.weightx = 1;
