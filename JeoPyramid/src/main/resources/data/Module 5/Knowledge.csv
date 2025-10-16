@@ -1,0 +1,12 @@
+The biological paradigm views the nervous system as a massively parallel, hierarchical network of neurons.#What is a neural network?#What is a digital network?#What is a Turing Machine?#What is a feedback loop?
+These are responsible for receiving incoming signals from other neurons.#What are dendrites?#What are axons?#What are synapses?#What is a mitochondria?
+This is originally inspired by the information-processing mechanisms of the human brain.#What are artificial neural networks?#What are digital networks?#What are cellular automata?#What are symbolic systems?
+This function in a neural network transforms the weighted sum of inputs into an output signal.#What is the activation or transfer function?#What is the recall function?#What is the bias factor?#What is the summation rule?
+Neural networks process information through multiple interconnected layers known as input, hidden, and output layers.#What are neural network layers?#What are genetic layers?#What are symbolic modules?#What are computational blocks?
+This model is the most widely used neural network learning algorithm.#What is the backpropagation model?#What is the Hopfield network?#What is the Kohonen network?#What is the Adaline model?
+The change in a connection’s weight increases when both neurons are activated.#What is Hebbian learning?#What is competitive learning?#What is reinforcement learning?#What is the delta rule?
+The backpropagation algorithm modifies input weights based in the difference between actual and desired output values?#What is the error propagation learning rule?#What is the competitive learning rule?#What is the Hebbian rule?#What is the Hopfield rule?
+These individual/s presented the first model of artificial neurons in 1943.#Who are Warren McCulloch and Walter Pitts?#Who is Alan Turing?#Who are Alan Hodgkin and Andrew Huxley?#Who is John
+von Neumann?
+These scientist/s showed that it is possible to build an electric model of the cell membrane based on very simple assumptions.#Who are Alan Hodgkin and Andrew Huxley?#Who are Warren McCulloch and Walter Pitts?#Who is John
+von Neumann?#Who is Alan Turing?
