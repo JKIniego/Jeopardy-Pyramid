@@ -33,6 +33,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "StartScreen exitButton" -> {
                     System.out.println("Exit button clicked");
+                    com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitPressAndWait();
                     gameEngine.terminateGame();
                 }
                 case "StartScreen howToPlayButton" -> {
@@ -83,6 +84,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "EndScreen exitButton" -> {
                     System.out.println("Exit button clicked");
+                    com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitPressAndWait();
                     gameEngine.terminateGame();
                 }
                 case "ModuleScreen moduleButton" -> {
@@ -105,6 +107,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "GameScreen menuExitButton" -> {
                     System.out.println("Exit button clicked");
+                    com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitPressAndWait();
                     gameEngine.terminateGame();
                 }
                 case "GameScreen pyramidButton" -> {

@@ -25,11 +25,13 @@ public class SoundManager {
 	}
 
 	public void play(String fileName) {
+		System.out.println("[SoundManager] play requested: " + fileName);
 		Clip clip = clipCache.get(fileName);
 		try {
 			if (clip == null) {
 				clip = loadClip(fileName);
 				if (clip == null) {
+					System.err.println("[SoundManager] loadClip returned null for " + fileName);
 					return; // Already logged
 				}
 				clipCache.put(fileName, clip);
