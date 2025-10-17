@@ -140,30 +140,36 @@ public class GUIStartScreen extends JPanel implements MouseListener{
     public void mouseEntered(MouseEvent e) {
         Object src = e.getSource();
         if (src == exitButton) {
+            System.out.println("[GUIStartScreen] hover: exitButton");
             brand.buttonHighlight(exitButton);
             brand.buttonTransparent(playButton);
             brand.buttonTransparent(aboutUsButton);
             brand.buttonTransparent(howToPlayButton);
             brand.buttonTransparent(settingsButton);
+            com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitHover();
         } else if (src == playButton) {
+            System.out.println("[GUIStartScreen] hover: playButton");
             brand.buttonHighlight(playButton);
             brand.buttonTransparent(exitButton);
             brand.buttonTransparent(aboutUsButton);
             brand.buttonTransparent(howToPlayButton);
             brand.buttonTransparent(settingsButton);
         } else if (src == aboutUsButton) {
+            System.out.println("[GUIStartScreen] hover: aboutUsButton");
             brand.buttonHighlight(aboutUsButton);
             brand.buttonTransparent(playButton);
             brand.buttonTransparent(exitButton);
             brand.buttonTransparent(howToPlayButton);
             brand.buttonTransparent(settingsButton);
         } else if (src == howToPlayButton) {
+            System.out.println("[GUIStartScreen] hover: howToPlayButton");
             brand.buttonHighlight(howToPlayButton);
             brand.buttonTransparent(playButton);
             brand.buttonTransparent(exitButton);
             brand.buttonTransparent(aboutUsButton);
             brand.buttonTransparent(settingsButton);
         } else if (src == settingsButton) {
+            System.out.println("[GUIStartScreen] hover: settingsButton");
             brand.buttonHighlight(settingsButton);
             brand.buttonTransparent(playButton);
             brand.buttonTransparent(exitButton);

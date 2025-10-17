@@ -96,6 +96,7 @@ public class GUIEndScreen extends JPanel implements MouseListener {
         if (src == exitButton) {
             brand.buttonHighlight(exitButton);
             brand.buttonTransparent(restartButton);
+            com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitHover();
         } else if (src == restartButton) {
             brand.buttonHighlight(restartButton);
             brand.buttonTransparent(exitButton);
