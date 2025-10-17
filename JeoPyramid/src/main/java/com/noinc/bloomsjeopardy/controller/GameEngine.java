@@ -256,7 +256,12 @@ public class GameEngine {
             updateButtonListeners();
             ((GUIGameScreen) mainGUI.getGameScreen()).updateLevels();
             System.out.println("Level unlocked! Current level: " + (gameData.getPlayerUnlockedLevels() + 1));
-            SoundManager.getInstance().playLevelIntro(gameData.getPlayerUnlockedLevels() + 1);
+            // Only play the level intro if the game is not over and the player still has health
+            if (gameState.getCurrentState() != GameState.State.END_SCREEN && gameData.getPlayerHealth() > 0) {
+                SoundManager.getInstance().playLevelIntro(gameData.getPlayerUnlockedLevels() + 1);
+            } else {
+                System.out.println("Skipping level intro because game is over or player has no health");
+            }
         } else {
             // All levels completed - top of pyramid reached!
             System.out.println("🎉 All levels completed! Top of pyramid reached!");
