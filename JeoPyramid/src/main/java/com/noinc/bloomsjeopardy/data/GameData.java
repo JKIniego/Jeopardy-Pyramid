@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.noinc.bloomsjeopardy.model.Question;
@@ -26,6 +28,7 @@ public class GameData {
     private final String[] categories = {"Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"};
     private final String[] modules = {"Module 1", "Module 2", "Module 3", "Module 4", "Module 5"};
     
+    private final Map<String, List<Question>> usedQuestionsMap = new HashMap<>();
     private List<Question> questions;
     private Random random;
     
@@ -122,6 +125,7 @@ public class GameData {
     
     // Reload questions when module changes
     public void reloadQuestionsForModule(int newModule) {
+        usedQuestionsMap.clear();
         if (newModule >= 0 && newModule < modules.length) {
             this.moduleSelected = newModule;
             loadQuestionsFromCSV();
@@ -171,6 +175,22 @@ public class GameData {
                 }
             }
         }
+
+        usedQuestionsMap.putIfAbsent(category, new ArrayList<>());
+        List<Question> usedForThisCategory = usedQuestionsMap.get(category);
+        
+        filteredQuestions.removeAll(usedForThisCategory);
+
+        if (filteredQuestions.isEmpty()) {
+            System.out.println("All questions used for " + category + " level=" + level + ". Resetting.");
+            usedQuestionsMap.get(category).clear();
+
+            for (Question q : questions) {
+                if (q.getCategory().equals(category) && q.getValue() == levelScores[level]) {
+                    filteredQuestions.add(q);
+                }
+            }
+        }
         
         if (filteredQuestions.isEmpty()) {
             // Default question as fallback
@@ -182,6 +202,7 @@ public class GameData {
         
         // Select a random question and randomize its answers
         Question selectedQuestion = filteredQuestions.get(random.nextInt(filteredQuestions.size()));
+        usedForThisCategory.add(selectedQuestion);
         return randomizeAnswers(selectedQuestion);
     }
     

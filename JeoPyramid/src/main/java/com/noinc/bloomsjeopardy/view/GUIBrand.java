@@ -17,7 +17,7 @@ public class GUIBrand {
     BufferedImage gameIconIMG, backgroundIMG, titleIMG, titleInGameIMG, howToPlayIMG, brickIMG, heartFullIMG, heartEmptyIMG, menuIMG, neuralBrainIMG;
     Color blue, lightBlue, darkBlue, red, green, white, black, gray; 
     Font CustomFontLarge, CustomFontFinalScore, CustomFontMedium, CustomFontSmall, CustomFontSmaller, CustomFontExtraSmall;
-    ImageIcon titleGIF, titleInGameGIF, gameOverGIF;
+    ImageIcon titleGIF, titleInGameGIF, gameOverGIF, congratulationsGIF;
 
     public GUIBrand(){
         blue = new Color(56, 182, 255);
@@ -70,10 +70,12 @@ public class GUIBrand {
             titleGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation.gif"));
             titleInGameGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation2.gif"));
             gameOverGIF = new ImageIcon(getClass().getResource("/Assets/Images/game-over.gif"));
-            
+            congratulationsGIF = new ImageIcon(getClass().getResource("/Assets/Images/congratulations-animation.gif"));
+
             titleGIF = resizeGIF(titleGIF, 800, 150);
             titleInGameGIF = resizeGIF(titleInGameGIF, 500, 100);
             gameOverGIF = resizeGIF(gameOverGIF, 900, 150);
+            congratulationsGIF = resizeGIF(congratulationsGIF, 950, 250);
 
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -26,8 +26,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.OverlayLayout;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -263,12 +265,72 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         qnaPanel.setLayout(new GridBagLayout());
         
         JPanel categoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
-        JPanel statementPanel = new JPanel(new GridBagLayout());
+        
         JPanel choiceContainerPanel = new JPanel(new GridLayout(2,2, 10, 10));
         JPanel choiceAPanel = new JPanel();
         JPanel choiceBPanel = new JPanel();
         JPanel choiceCPanel = new JPanel();
         JPanel choiceDPanel = new JPanel();
+
+        JPanel statementPanel = new JPanel(new GridBagLayout());
+        JScrollPane statementScrollPane = new JScrollPane(statementPanel);
+        statementScrollPane.setPreferredSize(new Dimension(900, 400));
+        statementScrollPane.setBorder(BorderFactory.createMatteBorder(8,0, 0, 0, brand.blue));
+        statementScrollPane.setBackground(brand.black);
+        statementScrollPane.getViewport().setBackground(brand.black);
+        statementScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        statementScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        statementScrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        statementScrollPane.getHorizontalScrollBar().setUnitIncrement(10);
+
+        statementScrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = brand.blue;
+                this.trackColor = brand.black;
+            }
+            
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                JButton button = super.createDecreaseButton(orientation);
+                button.setBackground(brand.blue);
+                button.setBorder(BorderFactory.createLineBorder(brand.blue));
+                return button;
+            }
+            
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                JButton button = super.createIncreaseButton(orientation);
+                button.setBackground(brand.blue);
+                button.setBorder(BorderFactory.createLineBorder(brand.blue));
+                return button;
+            }
+        });
+        
+        statementScrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = brand.blue;
+                this.trackColor = brand.black;
+            }
+            
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                JButton button = super.createDecreaseButton(orientation);
+                button.setBackground(brand.blue);
+                button.setBorder(BorderFactory.createLineBorder(brand.blue));
+                return button;
+            }
+            
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                JButton button = super.createIncreaseButton(orientation);
+                button.setBackground(brand.blue);
+                button.setBorder(BorderFactory.createLineBorder(brand.blue));
+                return button;
+            }
+        });
 
         choiceContainerPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         choiceContainerPanel.setOpaque(false);
@@ -290,7 +352,6 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         choiceDPanel.setLayout(new OverlayLayout(choiceDPanel));
 
         categoryPanel.setBorder(BorderFactory.createEmptyBorder(10,0, 10, 50));
-        statementPanel.setBorder(BorderFactory.createMatteBorder(8,0, 0, 0, brand.blue));
         choiceAPanel.setBorder(BorderFactory.createMatteBorder(5,5, 5, 5, brand.blue));
         choiceBPanel.setBorder(BorderFactory.createMatteBorder(5,5, 5, 5, brand.blue));
         choiceCPanel.setBorder(BorderFactory.createMatteBorder(5,5, 5, 5, brand.blue));
@@ -372,11 +433,13 @@ public class GUIGameScreen extends JPanel implements MouseListener  {
         qnaPanelGBC.gridy = 0;
         qnaPanel.add(categoryPanel, qnaPanelGBC);
         qnaPanelGBC.weightx = 1;
-        qnaPanelGBC.weighty = 0.5;
+        qnaPanelGBC.weighty = 2;
+        qnaPanelGBC.ipady = 300;
         qnaPanelGBC.gridy = 1;
-        qnaPanel.add(statementPanel, qnaPanelGBC);
+        qnaPanel.add(statementScrollPane, qnaPanelGBC);
         qnaPanelGBC.weightx = 1;
-        qnaPanelGBC.weighty = 0.1;
+        qnaPanelGBC.weighty = 0.01;
+        qnaPanelGBC.ipady = 20;
         qnaPanelGBC.gridy = 2;
         qnaPanel.add(choiceContainerPanel, qnaPanelGBC);
 

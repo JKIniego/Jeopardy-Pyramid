@@ -266,7 +266,7 @@ public class GameEngine {
             // All levels completed - top of pyramid reached!
             System.out.println("🎉 All levels completed! Top of pyramid reached!");
             javax.swing.Timer timer = new javax.swing.Timer(2000, e -> {
-                endMainGame();
+                endMainGame(1);
             });
             timer.setRepeats(false);
             timer.start();
@@ -292,7 +292,7 @@ public class GameEngine {
             ((GUIGameScreen) mainGUI.getGameScreen()).animateHUDHearts(false);
             System.out.println("Health decreased to: " + gameData.getPlayerHealth());
             if (gameData.getPlayerHealth() == 0){
-                endMainGame();
+                endMainGame(0);
             }
         }
     }
@@ -334,9 +334,14 @@ public class GameEngine {
         System.out.println("Game started!");
     }
 
-    public void endMainGame(){
+    public void endMainGame(int type){
         gameState.setCurrentState(GameState.State.END_SCREEN);
         ((GUIEndScreen) mainGUI.getEndScreen()).updateFinalScore();
+        if(type == 1){
+            ((GUIEndScreen) mainGUI.getEndScreen()).updateTitle(true);
+        }else if (type == 0){
+            ((GUIEndScreen) mainGUI.getEndScreen()).updateTitle(false);
+        }
         mainGUI.showEndScreen();
         System.out.println("Game ended! Final score: $" + gameData.getPlayerScore());
     }

@@ -17,7 +17,7 @@ import com.noinc.bloomsjeopardy.data.GameData;
 public class GUIEndScreen extends JPanel implements MouseListener {
     private JButton restartButton, exitButton;
     private JPanel parentPanel;
-    private JLabel finalScore;
+    private JLabel finalScore, titleLabel;
     private GameData gameData;
     private GUIBrand brand;
     
@@ -39,7 +39,7 @@ public class GUIEndScreen extends JPanel implements MouseListener {
             }
         };
         
-        JLabel titleLabel = new JLabel(brand.gameOverGIF);
+        titleLabel = new JLabel();
 
         finalScore = new JLabel("$" + gameData.getPlayerScore());
         finalScore.setForeground(brand.white);
@@ -87,6 +87,10 @@ public class GUIEndScreen extends JPanel implements MouseListener {
 
     public void updateFinalScore(){
         finalScore.setText("$"+gameData.getPlayerScore());
+    }
+
+    public void updateTitle(boolean allLevelsCompleted) {
+        titleLabel.setIcon(allLevelsCompleted ? brand.congratulationsGIF : brand.gameOverGIF);
     }
 
     @Override
