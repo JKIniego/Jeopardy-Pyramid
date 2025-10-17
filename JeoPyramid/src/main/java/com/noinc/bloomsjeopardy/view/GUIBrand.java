@@ -10,12 +10,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class GUIBrand {
-    BufferedImage gameIconIMG, backgroundIMG, titleIMG, titleInGameIMG, brickIMG, heartFullIMG, heartEmptyIMG, menuIMG;
+    BufferedImage gameIconIMG, backgroundIMG, titleIMG, titleInGameIMG, howToPlayIMG, brickIMG, heartFullIMG, heartEmptyIMG, menuIMG, neuralBrainIMG;
     Color blue, lightBlue, darkBlue, red, green, white, black, gray; 
-    Font CustomFontLarge, CustomFontFinalScore, CustomFontMedium, CustomFontSmall, CustomFontExtraSmall;
+    Font CustomFontLarge, CustomFontFinalScore, CustomFontMedium, CustomFontSmall, CustomFontSmaller, CustomFontExtraSmall;
+    ImageIcon titleGIF, titleInGameGIF, gameOverGIF;
 
     public GUIBrand(){
         blue = new Color(56, 182, 255);
@@ -36,6 +38,7 @@ public class GUIBrand {
             CustomFontLarge = CustomFont.deriveFont(Font.PLAIN, 65);
             CustomFontMedium = CustomFont.deriveFont(Font.PLAIN, 27);
             CustomFontSmall = CustomFont.deriveFont(Font.PLAIN, 16);
+            CustomFontSmaller = CustomFont.deriveFont(Font.PLAIN, 14);
             CustomFontExtraSmall = CustomFont.deriveFont(Font.PLAIN, 12);
             CustomFontFinalScore = CustomFont.deriveFont(Font.PLAIN, 40);
         } catch (IOException | FontFormatException e) {
@@ -43,7 +46,7 @@ public class GUIBrand {
         }
 
         try {
-            backgroundIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/background.png"));
+            backgroundIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/background.jpg"));
             titleIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/title.png"));
             titleInGameIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/titleInGame.png"));
             brickIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/brick.png"));
@@ -51,9 +54,9 @@ public class GUIBrand {
             heartEmptyIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/heart-empty.png"));
             menuIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/menu.png"));
             gameIconIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/game-icon.png"));
-
-            
-            //backgroundIMG = resizeImage(backgroundIMG, 200, 50);
+            neuralBrainIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/neural-brain.png"));
+            howToPlayIMG = ImageIO.read(getClass().getResourceAsStream("/Assets/Images/how-to-play.png"));
+    
             titleIMG = resizeImage(titleIMG, 800, 150);
             titleInGameIMG = resizeImage(titleInGameIMG, 450, 80);
             brickIMG = resizeImage(brickIMG, 170, 53);
@@ -61,11 +64,26 @@ public class GUIBrand {
             heartEmptyIMG = resizeImage(heartEmptyIMG, 20, 20);
             menuIMG = resizeImage(menuIMG, 20, 20);
             gameIconIMG = resizeImage(gameIconIMG, 250, 200);
+            neuralBrainIMG = resizeImage(neuralBrainIMG, 200, 200);
+            howToPlayIMG = resizeImage(howToPlayIMG, 900, 3441);
+
+            titleGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation.gif"));
+            titleInGameGIF = new ImageIcon(getClass().getResource("/Assets/Images/jeopardy-animation2.gif"));
+            gameOverGIF = new ImageIcon(getClass().getResource("/Assets/Images/game-over.gif"));
+            
+            titleGIF = resizeGIF(titleGIF, 800, 150);
+            titleInGameGIF = resizeGIF(titleInGameGIF, 500, 100);
+            gameOverGIF = resizeGIF(gameOverGIF, 900, 150);
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         
+    }
+
+    public ImageIcon resizeGIF(ImageIcon icon, int width, int height) {
+        Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        return new ImageIcon(scaled);
     }
 
     public BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {

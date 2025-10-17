@@ -61,7 +61,7 @@ public class GUIAboutUsScreen extends JPanel implements MouseListener {
         titlePanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         
         JLabel titleLabel = new JLabel("About Us");
-        titleLabel.setFont(brand.CustomFontLarge);
+        titleLabel.setFont(brand.CustomFontMedium);
         titleLabel.setForeground(brand.blue);
         titlePanel.add(titleLabel);
 
@@ -73,7 +73,7 @@ public class GUIAboutUsScreen extends JPanel implements MouseListener {
         JTextPane aboutTextPane = new JTextPane();
         aboutTextPane.setBackground(brand.black);
         aboutTextPane.setForeground(brand.white);
-       aboutTextPane.setFont(brand.CustomFontMedium.deriveFont(16f));
+        aboutTextPane.setFont(brand.CustomFontSmall.deriveFont(16f));
         aboutTextPane.setEditable(false);
         aboutTextPane.setMargin(new Insets(20, 20, 20, 20));
         
@@ -81,6 +81,7 @@ public class GUIAboutUsScreen extends JPanel implements MouseListener {
         StyledDocument doc = aboutTextPane.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        StyleConstants.setLineSpacing(center, 1.0f);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
         
         String aboutText = "JEOPYRAMID\n\n" +
@@ -147,8 +148,11 @@ public class GUIAboutUsScreen extends JPanel implements MouseListener {
         
         backButton = new JButton("Back");
         backButton.setActionCommand("AboutUs backButton");
+        backButton.setPreferredSize(new Dimension(200, 30));
+        backButton.setBorderPainted(false);
+        backButton.setForeground(brand.white);
+        backButton.setBackground(brand.black);
         backButton.setFont(brand.CustomFontMedium);
-        brand.buttonTransparent(backButton);
         backButton.addMouseListener(this);
         buttonPanel.add(backButton);
 
@@ -190,7 +194,7 @@ public class GUIAboutUsScreen extends JPanel implements MouseListener {
     public void mouseEntered(MouseEvent e) {
         Object src = e.getSource();
         if (src == backButton) {
-            brand.buttonHighlight(backButton);
+            backButton.setBackground(brand.blue);
         }
     }
 
@@ -198,7 +202,7 @@ public class GUIAboutUsScreen extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
         Object src = e.getSource();
         if (src == backButton) {
-            brand.buttonTransparent(backButton);
+            backButton.setBackground(brand.black);
         }
     }
 

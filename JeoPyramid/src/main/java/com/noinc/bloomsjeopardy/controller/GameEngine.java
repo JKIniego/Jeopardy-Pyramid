@@ -7,12 +7,14 @@ import javax.swing.JButton;
 import com.noinc.bloomsjeopardy.data.GameData;
 import com.noinc.bloomsjeopardy.model.GameState;
 import com.noinc.bloomsjeopardy.model.Question;
+import com.noinc.bloomsjeopardy.utils.SoundManager;
+import com.noinc.bloomsjeopardy.view.GUIAboutUsScreen;
 import com.noinc.bloomsjeopardy.view.GUIEndScreen;
 import com.noinc.bloomsjeopardy.view.GUIGameScreen;
-import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
-import com.noinc.bloomsjeopardy.view.GUIStartScreen;
-import com.noinc.bloomsjeopardy.view.GUIAboutUsScreen;
 import com.noinc.bloomsjeopardy.view.GUIHowToPlayScreen;
+import com.noinc.bloomsjeopardy.view.GUIModuleScreen;
+import com.noinc.bloomsjeopardy.view.GUISettingsScreen;
+import com.noinc.bloomsjeopardy.view.GUIStartScreen;
 import com.noinc.bloomsjeopardy.view.MainGUI;
 
 public class GameEngine {
@@ -27,6 +29,10 @@ public class GameEngine {
         mainGUI = new MainGUI(gameData);
         playerActionListener = new PlayerActionListener(this);
         addActionListeners();
+        // Play background music when open
+        SoundManager.getInstance().playBackgroundMusic();
+        // Play intro sound on application open
+        SoundManager.getInstance().playIntro();
         
         // Debug: Print how many questions were loaded
         System.out.println("Total questions loaded: " + gameData.getQuestions().size());
@@ -44,12 +50,15 @@ public class GameEngine {
         ((GUIStartScreen) mainGUI.getStartScreen()).getExitButton().addActionListener(playerActionListener);
         ((GUIStartScreen) mainGUI.getStartScreen()).getAboutUsButton().addActionListener(playerActionListener);
         ((GUIStartScreen) mainGUI.getStartScreen()).getHowToPlayButton().addActionListener(playerActionListener);
+        ((GUIStartScreen) mainGUI.getStartScreen()).getSettingsButton().addActionListener(playerActionListener);
         ((GUIAboutUsScreen) mainGUI.getAboutUsScreen()).getBackButton().addActionListener(playerActionListener);
         ((GUIHowToPlayScreen) mainGUI.getHowToPlayScreen()).getBackButton().addActionListener(playerActionListener);
+        ((GUISettingsScreen) mainGUI.getSettingsScreen()).getBackButton().addActionListener(playerActionListener);
         ((GUIModuleScreen) mainGUI.getModuleScreen()).getModuleBackButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getScreen2BackButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuResumeButton().addActionListener(playerActionListener);
+        ((GUIGameScreen) mainGUI.getGameScreen()).getMenuSettingsButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuRestartButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getMenuExitButton().addActionListener(playerActionListener);
         ((GUIGameScreen) mainGUI.getGameScreen()).getChoiceA().addMouseListener(playerActionListener);
@@ -67,6 +76,7 @@ public class GameEngine {
     }
 
     public void updateButtonListeners() {
+        // For Pyramid Buttons Only
         GUIGameScreen gameScreen = (GUIGameScreen) mainGUI.getGameScreen();
         JButton[][] itemButtonsArray = gameScreen.getItemButtonsArray();
         int levelUnlocked = gameData.getPlayerUnlockedLevels();
@@ -84,6 +94,32 @@ public class GameEngine {
                 }
             }
         }
+    }
+
+    public void enableAllButtonListeners() {
+        // For Pyramid Buttons Only
+        GUIGameScreen gameScreen = (GUIGameScreen) mainGUI.getGameScreen();
+        JButton[][] itemButtonsArray = gameScreen.getItemButtonsArray();
+
+        for (int row = 0; row < itemButtonsArray.length; row++) {
+            for (int col = 0; col < itemButtonsArray[row].length; col++) {
+                JButton btn = itemButtonsArray[row][col];
+                // Remove any old listeners to avoid duplicates
+                for (var al : btn.getActionListeners()) {
+                    if (al instanceof PlayerActionListener) {
+                        btn.removeActionListener(al);
+                    }
+                }
+                // Add back the listener
+                btn.addActionListener(playerActionListener);
+                btn.setEnabled(true);
+            }
+        }
+    }
+
+    public void disableButtonListener(JButton button) {
+        // For Pyramid Buttons Only
+        button.removeActionListener(playerActionListener);
     }
 
     public void selectQuestion(int row, int col) {
@@ -169,8 +205,12 @@ public class GameEngine {
             ((GUIGameScreen) mainGUI.getGameScreen()).showAnswerFeedback(correct, choiceIndex, gameState.getCurrentQuestion().getCorrectIndex());
             
             if (correct) {
+                // Play one of the correct sounds randomly
+                SoundManager.getInstance().playCorrectRandom();
                 handleCorrectAnswer();
             } else {
+                // Play one of the wrong sounds randomly
+                SoundManager.getInstance().playWrongRandom();
                 handleIncorrectAnswer();
             }
         } else {
@@ -183,6 +223,7 @@ public class GameEngine {
         
         if (gameData.areAllQuestionsAnswered(row)) {
             unlockNextLevel();
+            incrementHealth();
         }
     }
     
@@ -209,11 +250,26 @@ public class GameEngine {
     public void unlockNextLevel(){
         int currentLevel = gameData.getPlayerUnlockedLevels();
         int maxLevel = gameData.getLevelScores().length - 1;
+        
         if(currentLevel < maxLevel){
             gameData.setPlayerUnlockedLevels(currentLevel + 1);
             updateButtonListeners();
             ((GUIGameScreen) mainGUI.getGameScreen()).updateLevels();
-            System.out.println("Level unlocked! Current level: " + gameData.getPlayerUnlockedLevels());
+            System.out.println("Level unlocked! Current level: " + (gameData.getPlayerUnlockedLevels() + 1));
+            // Only play the level intro if the game is not over and the player still has health
+            if (gameState.getCurrentState() != GameState.State.END_SCREEN && gameData.getPlayerHealth() > 0) {
+                SoundManager.getInstance().playLevelIntro(gameData.getPlayerUnlockedLevels() + 1);
+            } else {
+                System.out.println("Skipping level intro because game is over or player has no health");
+            }
+        } else {
+            // All levels completed - top of pyramid reached!
+            System.out.println("🎉 All levels completed! Top of pyramid reached!");
+            javax.swing.Timer timer = new javax.swing.Timer(2000, e -> {
+                endMainGame();
+            });
+            timer.setRepeats(false);
+            timer.start();
         }
     }
 
@@ -223,6 +279,7 @@ public class GameEngine {
         if(currentHealth < maxPlayerHealth){
             gameData.setPlayerHealth(currentHealth + 1);
             ((GUIGameScreen) mainGUI.getGameScreen()).updateHUD();
+            ((GUIGameScreen) mainGUI.getGameScreen()).animateHUDHearts(true);
             System.out.println("Health increased to: " + gameData.getPlayerHealth());
         }
     }
@@ -232,6 +289,7 @@ public class GameEngine {
         if(currentHealth > 0){
             gameData.setPlayerHealth(currentHealth - 1);
             ((GUIGameScreen) mainGUI.getGameScreen()).updateHUD();
+            ((GUIGameScreen) mainGUI.getGameScreen()).animateHUDHearts(false);
             System.out.println("Health decreased to: " + gameData.getPlayerHealth());
             if (gameData.getPlayerHealth() == 0){
                 endMainGame();
@@ -244,6 +302,7 @@ public class GameEngine {
         int addedScore = gameData.getLevelScores()[row];
         gameData.setPlayerScore(currentPlayerScore + addedScore);
         ((GUIGameScreen) mainGUI.getGameScreen()).updateHUD();
+        ((GUIGameScreen) mainGUI.getGameScreen()).animateHUDScore();
         System.out.println("Score updated: $" + currentPlayerScore + " + $" + addedScore + " = $" + gameData.getPlayerScore());
     }
 
@@ -256,8 +315,8 @@ public class GameEngine {
         ((GUIGameScreen) mainGUI.getGameScreen()).showMenuDialog();
     }
 
-    public void showConfirmationDialog(int choice){
-        if (((GUIGameScreen) mainGUI.getGameScreen()).showConfirmationDialog("Is that your final answer?")){
+    public void showAnswerConfirmationDialog(int choice){
+        if (mainGUI.showConfirmationDialog("Is that your final answer?", 1)){
             submitAnswer(choice);
         }
     }
@@ -266,7 +325,11 @@ public class GameEngine {
         updateButtonListeners();
         gameState.setCurrentState(GameState.State.PYRAMID_SCREEN);
         mainGUI.showGameScreen();
+        ((GUIGameScreen) mainGUI.getGameScreen()).animatePyramidBuild();
         showPyramidScreen();
+        // Play level intro based on unlocked level (1-based index for file names)
+        int level = gameData.getPlayerUnlockedLevels() + 1;
+        SoundManager.getInstance().playLevelIntro(level);
         System.out.println("Module: " + gameData.getModuleSelected());
         System.out.println("Game started!");
     }
@@ -279,17 +342,28 @@ public class GameEngine {
     }
 
     public void terminateGame(){
-        System.out.println("Game terminated");
-        System.exit(0);
+        if (mainGUI.showConfirmationDialog("Are You Sure?", 0)){
+            System.out.println("Game terminated");
+                // Play exit press sound and wait for it to finish before exiting
+                SoundManager.getInstance().playExitPressAndWait();
+                System.exit(0);
+        }
+        
     }
 
     public void restartGame(){
+        // Reset game data and state
         gameData = new GameData();
         gameState = new GameState();
-        mainGUI.getMainFrame().dispose();
-        mainGUI = new MainGUI(gameData);
+        
+        // Reinitialize GUI without closing window
+        mainGUI.reinitialize(gameData);
+        
+        // Recreate and re-add all action listeners
         playerActionListener = new PlayerActionListener(this);
         addActionListeners();
+        
+        System.out.println("Game restarted");
     }
 
     public void resumeGame(){
@@ -317,6 +391,16 @@ public class GameEngine {
     public void showHowToPlay(){
         mainGUI.showHowToPlayScreen();
         System.out.println("Showing How to Play screen");
+    }
+
+    public void showSettings(){
+        if (gameState.getCurrentState() == GameState.State.PYRAMID_SCREEN || 
+            gameState.getCurrentState() == GameState.State.QUESTION_SCREEN) {
+            ((GUIGameScreen) mainGUI.getGameScreen()).hideMenuDialog();
+        }
+        
+        mainGUI.showSettingsScreen();
+        System.out.println("Showing Settings screen");
     }
 
     // Getters and Setters

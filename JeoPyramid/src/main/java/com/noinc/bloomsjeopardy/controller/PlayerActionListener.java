@@ -8,6 +8,9 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.noinc.bloomsjeopardy.model.GameState;
+import com.noinc.bloomsjeopardy.view.GUIGameScreen;
+
 public class PlayerActionListener implements ActionListener, MouseListener{
     private GameEngine gameEngine;
 
@@ -30,11 +33,16 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "StartScreen exitButton" -> {
                     System.out.println("Exit button clicked");
+                    com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitPressAndWait();
                     gameEngine.terminateGame();
                 }
                 case "StartScreen howToPlayButton" -> {
                     System.out.println("How to Play button clicked");
                     gameEngine.showHowToPlay();
+                }
+                case "StartScreen settingsButton" -> {
+                    System.out.println("Settings button clicked");
+                    gameEngine.showSettings();
                 }
                 case "StartScreen aboutUsButton" -> {
                     System.out.println("About Us button clicked");
@@ -47,6 +55,16 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 case "HowToPlay backButton" -> {
                     System.out.println("How to Play back button clicked");
                     gameEngine.getMainGUI().showStartScreen();
+                }
+                case "Settings backButton" -> {
+                    System.out.println("Settings back button clicked");
+                    if (gameEngine.getGameState().getCurrentState() == GameState.State.PYRAMID_SCREEN || 
+                        gameEngine.getGameState().getCurrentState() == GameState.State.QUESTION_SCREEN) {
+                        gameEngine.getMainGUI().showGameScreen();
+                        ((GUIGameScreen) gameEngine.getMainGUI().getGameScreen()).showMenuDialog();
+                    } else {
+                        gameEngine.getMainGUI().showStartScreen();
+                    }
                 }
                 case "ModuleScreen moduleBackButton" -> {
                     System.out.println("Back button clicked");
@@ -66,6 +84,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                 }
                 case "EndScreen exitButton" -> {
                     System.out.println("Exit button clicked");
+                    com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitPressAndWait();
                     gameEngine.terminateGame();
                 }
                 case "ModuleScreen moduleButton" -> {
@@ -78,12 +97,17 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                     System.out.println("Resume button clicked");
                     gameEngine.resumeGame();
                 }
+                case "GameScreen menuSettingsButton" -> {
+                    System.out.println("Settings button clicked");
+                    gameEngine.showSettings();
+                }
                 case "GameScreen menuRestartButton" -> {
                     System.out.println("Restart button clicked");
                     gameEngine.restartGame();
                 }
                 case "GameScreen menuExitButton" -> {
                     System.out.println("Exit button clicked");
+                    com.noinc.bloomsjeopardy.utils.SoundManager.getInstance().playExitPressAndWait();
                     gameEngine.terminateGame();
                 }
                 case "GameScreen pyramidButton" -> {
@@ -91,7 +115,15 @@ public class PlayerActionListener implements ActionListener, MouseListener{
                     int col = (int) btn.getClientProperty("col");
                     System.out.println("Pyramid button clicked: " + btn.getText() + " at [" + row + "][" + col + "]");
                     
+                    // check if this question has already been answered
+                    if (gameEngine.getGameData().isQuestionAnswered(row, col)) {
+                        System.out.println("Question already answered at [" + row + "][" + col + "] - ignoring click");
+                        return; // don't proceed if already answered
+                    }
+                    
                     gameEngine.selectQuestion(row, col);
+                    //btn.removeActionListener(this);
+                    gameEngine.disableButtonListener(btn);
                     // gameEngine.unlockNextLevel(); // temporary for testing purposes
                 }
                 default -> {
@@ -109,7 +141,7 @@ public class PlayerActionListener implements ActionListener, MouseListener{
             JPanel panel = (JPanel) src;
             System.out.println("Panel clicked: " + panel.getName());
             int answerIndex = (int) panel.getClientProperty("index");
-            gameEngine.showConfirmationDialog(answerIndex);
+            gameEngine.showAnswerConfirmationDialog(answerIndex);
         }
     }
 
