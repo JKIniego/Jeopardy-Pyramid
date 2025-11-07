@@ -1,0 +1,10 @@
+A type of machine learning focused on neural networks and training algorithms.#What is deep learning?#What is data analytics?#What is reinforcement learning?#What is artificial intelligence?
+A function that makes neural networks nonlinear and determines if neurons should activate.#What is an activation function?#What is a cost function?#What is batch normalization?#What is dropout?
+A nonlinear activation method that outputs 0 for negative values and the same value for positive ones.#What is ReLU?#What is sigmoid?#What is tanh?#What is softmax?
+A vector representation technique where one element is 1 and all others are 0.#What is one-hot encoding?#What is feature scaling?#What is normalization?#What is loss computation?
+The term used for extremely large and complex datasets generated at high speed.#What is Big Data?#What is Data Mining?#What is Cloud Storage?#What is Edge Computing?
+The stage of the Big Data value chain that focuses on gathering information from multiple sources.#What is Data Generation and Acquisition?#What is Data Visualization?#What is Data Interpretation?#What is Data Summarization?
+The phenomenon representing the exponential growth of information creation in the digital era.#What is the Data Revolution?#What is the Digital Economy?#What is the Machine Age?#What is Cloud Expansion?
+The sequence of data units that range from bytes up to yottabytes.#What are the Units of Digital Storage?#What are the Units of Network Bandwidth?#What are the Units of Processing Speed?#What are the Units of Memory Latency?
+This component is essentially a core building block for neural networks.#What is a perceptron?#What is an optimizer?#What is an activation function?#What is a dropout rate?
+This type of neural network can model sequential information, but it cannot remember from longer sequences of time.#What is Recurrent Neural Network?#What is Convolutional Neural Network?#What is Artificial Neural Network?#What is Feedforward Neural Network?
